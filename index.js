@@ -3,3 +3,4 @@
 // rendering stock charts and allowing for user input and interaction.
 
 console.log("hello test");
+console.log("hello again");
