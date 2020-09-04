@@ -1,0 +1,11 @@
+{
+  "name": "graphics",
+  "version": "1.0.0",
+  "description": "A small library for rendering stock charts",
+  "main": "index.js",
+  "scripts": {
+    "test": "Graphics Start"
+  },
+  "author": "Tommy Benjamin",
+  "license": "MIT"
+}
