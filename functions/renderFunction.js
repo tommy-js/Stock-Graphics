@@ -15,25 +15,48 @@ function renderCanvas(height, width, points) {
   // Attach the canvas to the body
   document.body.appendChild(canv);
   // Calculate the width so that we can define the div widths
-  let calcWidth = calculateWidth(width, points);
-  console.log(calculateWidth(width, points));
+  let calcWidth = calculateWidth(width, points.length);
+  console.log(calculateWidth(width, points.length));
   // Create a container div to hold all the smaller divs and sit over the graph
   let container = document.createElement("div");
   container.style = `width: ${width}px; height: ${height}px; position: absolute; left: 100px; top: 100px;`;
   document.body.appendChild(container);
-  for (let p = 0; p < points; p++) {
+  for (let p = 0; p < points.length; p++) {
     // Create divs that we can mouse-over to see information
     let div = document.createElement("div");
     // Calculate distance to move each div to the right so that they don't overlap
-    let calcRight = calcWidth + p * calcWidth;
+    let calcRight = p * calcWidth;
     div.style = `position: absolute; width: ${calcWidth}px; height: ${height}px; display:
     inline-block; border: 1px solid black; right: ${calcRight}px`;
+    // Function for when we mouse over a div, which makes a circle appear showing current stock value
+    div.addEventListener("mouseover", function () {
+      renderYCircle(true, calcRight, points[p].y);
+    });
+    // Function for when we move out of a div, which removes the circle
+    div.addEventListener("mouseout", function () {
+      renderYCircle(false, calcRight, points[p].y);
+    });
+    // Appends each div to the container div
     container.appendChild(div);
   }
 }
 
-function calculateWidth(width, points) {
-  let graphWidth = Math.floor(width / points);
+// Function renders a circle to show us the current value of stock
+function renderYCircle(mouseIn, calcRight, height) {
+  console.log(height);
+  let canv = document.getElementById("canvasID");
+  let circ = canv.getContext("2d");
+  if (mouseIn === true) {
+    circ.beginPath();
+    circ.arc(calcRight, height, 5, 0, 2 * Math.PI);
+    circ.stroke();
+  } else {
+    circ.clearRect(calcRight, 0, 300, 150);
+  }
+}
+
+function calculateWidth(width, xPoints) {
+  let graphWidth = Math.floor(width / xPoints);
   return graphWidth;
 }
 
