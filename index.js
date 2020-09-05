@@ -5,11 +5,11 @@
 import renderCanvas from "./functions/renderFunction.js";
 
 let points = [
-  { x: 0, y: 40 },
+  { x: 0, y: 100 },
   { x: 1, y: 55 },
   { x: 2, y: 80 },
-  { x: 3, y: 25 },
+  { x: 3, y: 105 },
   { x: 4, y: 78 },
 ];
 
-renderCanvas(200, 600, points);
+renderCanvas(300, 600, points);
