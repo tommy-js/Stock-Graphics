@@ -6,6 +6,11 @@
 // calculate the distance between each point and the ones next to it, and draw
 // a line between them.
 
+// The render function will always render two containers to the left and two to the
+// right of the maximum available in view. When the user scrolls out it will re-render
+// and add more to the sides once the edge of the first container is reached. This way
+// it will always appear fluid. Scrolling in will work the same way.
+
 function renderCanvas(height, width, points) {
   // Define the canvas
   let canv = document.createElement("canvas");
@@ -42,46 +47,57 @@ function renderDivs(points, calcWidth, height, dpi) {
   for (let p = 0; p < points.length; p++) {
     // Calculate height of the maximum point on each div. This is because the
     // canvas measures from top to bottom, meaning out graph needs to be flipped
-    // vertically to actually appear correct.
-    let modifiedHeight = height * dpi;
-    let posY = modifiedHeight - points[p].y;
     // Create divs that we can mouse-over to see information
     let div = document.createElement("div");
     // Calculate distance to move each div to the right so that they don't overlap
     let calcLeft = p * calcWidth;
+    let positions = findPositions(points, p, height, calcWidth, calcLeft, dpi);
     div.style = `position: absolute; width: ${calcWidth}px; height: ${height}px;
     border: 1px solid black; left: ${calcLeft}px`;
     // Function for when we mouse over a div, which makes a circle appear showing current stock value
     div.addEventListener("mouseover", function () {
-      renderYCircle(true, calcLeft, posY, calcWidth, height, dpi);
+      renderYCircle(true, calcLeft, positions.posY, calcWidth, height, dpi);
     });
     // Function for when we move out of a div, which removes the circle
     div.addEventListener("mouseout", function () {
-      renderYCircle(false, calcLeft, posY, calcWidth, height, dpi);
+      renderYCircle(false, calcLeft, positions.posY, calcWidth, height, dpi);
     });
     // Appends each div to the container div
     container.appendChild(div);
-    // Calculates the center of the div
-    // positioningx1 finds the x-pos for the current div
-    // positioningx2 finds the x-pos for the next div
-    let positioningx1 = calculateCenterAlign(calcWidth, calcLeft, 5 * dpi, dpi);
-    let positioningy1 = posY;
-    let leftPosX2 = calcLeft + calcWidth;
-    let positioningx2 = calculateCenterAlign(
-      calcWidth,
-      leftPosX2,
-      5 * dpi,
-      dpi
-    );
-    let positioningy2;
-    if (points[p + 1]) {
-      positioningy2 = modifiedHeight - points[p + 1].y;
-    } else {
-      positioningy2 = posY;
-    }
     // Renders the line running from current one to the next
-    renderLine(positioningx1, positioningy1, positioningx2, positioningy2);
+    renderLine(
+      positions.positioningx1,
+      positions.positioningy1,
+      positions.positioningx2,
+      positions.positioningy2
+    );
   }
+}
+
+function findPositions(points, p, height, calcWidth, calcLeft, dpi) {
+  // vertically to actually appear correct.
+  let modifiedHeight = height * dpi;
+  let posY = modifiedHeight - points[p].y;
+  // Calculates the center of the div
+  // positioningx1 finds the x-pos for the current div
+  // positioningx2 finds the x-pos for the next div
+  let positioningx1 = calculateCenterAlign(calcWidth, calcLeft, 5 * dpi, dpi);
+  let positioningy1 = posY;
+  let leftPosX2 = calcLeft + calcWidth;
+  let positioningx2 = calculateCenterAlign(calcWidth, leftPosX2, 5 * dpi, dpi);
+  let positioningy2;
+  if (points[p + 1]) {
+    positioningy2 = modifiedHeight - points[p + 1].y;
+  } else {
+    positioningy2 = posY;
+  }
+  return {
+    positioningx1: positioningx1,
+    positioningy1: positioningy1,
+    positioningx2: positioningx2,
+    positioningy2: positioningy2,
+    posY: posY,
+  };
 }
 
 function renderLine(startX, startY, endX, endY) {
