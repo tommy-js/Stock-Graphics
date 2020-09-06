@@ -37,7 +37,80 @@ function renderCanvas(height, width, points) {
 
   // Function renders all the divs you can highlight over
   renderDivs(width, points, height, dpi);
+  renderVerticalValues(height, points);
 }
+
+// Returns the maximum vertical value of the graph
+function maxPoints(points) {
+  let max = Math.max.apply(
+    Math,
+    points.map(function (o) {
+      return o.y;
+    })
+  );
+  return max;
+}
+
+// Returns the minimum vertical value of the graph
+function minPoints(points) {
+  let min = Math.min.apply(
+    Math,
+    points.map(function (o) {
+      return o.y;
+    })
+  );
+  return min;
+}
+
+// Returns a value defining the best scaling to use for the vertical bar on the graph
+function declutterVertical(max, min, points) {
+  let scaling;
+  let verticalDistance = max - min;
+  if (verticalDistance >= 0.1) {
+    scaling = 0.025;
+  }
+  if (verticalDistance >= 1 && verticalDistance < 10) {
+    scaling = 2.5;
+  } else if (verticalDistance >= 10 && verticalDistance < 100) {
+    scaling = 25;
+  } else if (verticalDistance >= 100 && verticalDistance < 1000) {
+    scaling = 250;
+  } else if (verticalDistance >= 1000 && verticalDistance < 10000) {
+    scaling = 2500;
+  } else if (verticalDistance >= 10000 && verticalDistance < 100000) {
+    scaling = 25000;
+  } else if (verticalDistance >= 100000 && verticalDistance < 1000000) {
+    scaling = 250000;
+  } else if (verticalDistance >= 1000000) {
+    scaling = 2500000;
+  }
+  return scaling;
+}
+
+// Calculates and returns the height each value should be displayed at
+function verticalValueHeight(canvasHeight, height) {
+  let calculatedHeight = height - canvasHeight;
+  console.log(calculatedHeight);
+  return calculatedHeight;
+}
+
+// Actually renders out the vertical values for the graph
+function renderVerticalValues(canvasHeight, points) {
+  let max = maxPoints(points);
+  let min = minPoints(points);
+  let scaling = declutterVertical(max, min, points);
+  let container = document.getElementById("container");
+  for (let v = 3; v >= 0; v--) {
+    let displayedVal = v * scaling;
+    let vHeight = verticalValueHeight(canvasHeight, displayedVal);
+    let info = document.createElement("p");
+    info.innerHTML = `${displayedVal}`;
+    container.appendChild(info);
+    info.style = `bottom: ${vHeight}px; left: 0; position: absolute;`;
+  }
+}
+
+function renderHorizontalValues() {}
 
 function renderDivs(width, points, height, dpi) {
   let container = document.getElementById("container");
