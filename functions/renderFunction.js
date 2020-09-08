@@ -34,7 +34,14 @@ function renderCanvas(height, width, points, scaleX, scaleY) {
   container.setAttribute("id", "container");
   container.style = `width: ${width}px; height: ${height}px; position: absolute; left: 100px; top: 100px;`;
 
+  // Appends the container div into the main document
   document.body.appendChild(container);
+
+  let infoDiv = document.createElement("div");
+  infoDiv.setAttribute("id", "infoDiv");
+  infoDiv.style =
+    "position: absolute;width: 100px; height: 50px; border: 1px solid red;";
+  container.appendChild(infoDiv);
 
   // Function renders all the divs you can highlight over
   renderDivs(width, points, height, dpi);
@@ -159,11 +166,11 @@ function renderDivs(width, points, height, dpi) {
     border: 1px solid black; left: ${left}px`;
     // Function for when we mouse over a div, which makes a circle appear showing current stock value
     div.addEventListener("mouseover", function () {
-      renderYCircle(true, left, positions.posY, calcWidth, height, dpi);
+      renderYCircle(true, left, points[p].y, calcWidth, height, dpi);
     });
     // Function for when we move out of a div, which removes the circle
     div.addEventListener("mouseout", function () {
-      renderYCircle(false, left, positions.posY, calcWidth, height, dpi);
+      renderYCircle(false, left, points[p].y, calcWidth, height, dpi);
     });
     // Appends each div to the container div
     container.appendChild(div);
@@ -224,18 +231,26 @@ function renderLine(startX, startY, endX, endY) {
 function renderYCircle(mouseIn, x, y, width, height, dpi) {
   // console.log(x);
   // Scale the radius of the circle appropriately for the screen size
-  let radius = 5 * dpi;
-  let canv = document.getElementById("canvasID");
-  let circ = canv.getContext("2d");
-  let positioning = calculateCenterAlign(width, x, radius, dpi);
+  // let radius = 5 * dpi;
+  // let canv = document.getElementById("canvasID");
+  // let circ = canv.getContext("2d");
+  // let positioning = calculateCenterAlign(width, x, radius, dpi);
+  // if (mouseIn === true) {
+  //   circ.beginPath();
+  //   circ.arc(positioning, y, radius, 0, 2 * Math.PI);
+  //   circ.stroke();
+  // } else {
+  //   // Calculates where to place the circle on the canvas so that it is
+  //   // centered within the div the user mouses over
+  //   circ.clearRect(x * dpi, 0, height * dpi, width * dpi);
+  // }
+
+  // THEORETICAL
+  let info = document.getElementById("infoDiv");
   if (mouseIn === true) {
-    circ.beginPath();
-    circ.arc(positioning, y, radius, 0, 2 * Math.PI);
-    circ.stroke();
+    info.innerHTML = `${y}`;
   } else {
-    // Calculates where to place the circle on the canvas so that it is
-    // centered within the div the user mouses over
-    circ.clearRect(x * dpi, 0, height * dpi, width * dpi);
+    info.innerHTML = ``;
   }
 }
 
