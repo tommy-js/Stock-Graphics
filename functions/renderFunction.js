@@ -38,6 +38,7 @@ function renderCanvas(height, width, points) {
   // Function renders all the divs you can highlight over
   renderDivs(width, points, height, dpi);
   renderVerticalValues(height, points);
+  renderHorizontalValues(calcWidth, points);
 }
 
 // Returns the maximum vertical value of the graph
@@ -110,7 +111,35 @@ function renderVerticalValues(canvasHeight, points) {
   }
 }
 
-function renderHorizontalValues() {}
+function renderHorizontalValues(calcWidth, points) {
+  let scaling = declutterHorizontal(points);
+  console.log("scaling:" + scaling);
+  let max = points.length - 1;
+  let container = document.getElementById("container");
+  for (let v = 0; v < max; v += scaling) {
+    let width = v * calcWidth + calcWidth;
+    console.log("v: " + v);
+    let info = document.createElement("p");
+    info.innerHTML = `${v}`;
+    container.appendChild(info);
+    info.style = `bottom: 0; left: ${width}px; position: absolute;`;
+  }
+}
+
+function declutterHorizontal(points) {
+  let horizontalDistance = points.length;
+  let scaling;
+  if (horizontalDistance >= 1 && horizontalDistance < 10) {
+    scaling = 3;
+  } else if (horizontalDistance >= 10 && horizontalDistance < 100) {
+    scaling = 5;
+  } else if (horizontalDistance >= 100 && horizontalDistance < 1000) {
+    scaling = 200;
+  } else {
+    scaling = 2000;
+  }
+  return scaling;
+}
 
 function renderDivs(width, points, height, dpi) {
   let container = document.getElementById("container");
@@ -207,6 +236,7 @@ function renderYCircle(mouseIn, x, y, width, height, dpi) {
   }
 }
 
+// Calculates the center of the div
 function calculateCenterAlign(divWidth, left, radius, dpi) {
   let calculatedPos =
     left * dpi + Math.floor(divWidth / 2) * dpi - Math.floor(radius / 2);
