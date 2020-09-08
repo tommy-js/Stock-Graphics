@@ -11,7 +11,7 @@
 // and add more to the sides once the edge of the first container is reached. This way
 // it will always appear fluid. Scrolling in will work the same way.
 
-function renderCanvas(height, width, points) {
+function renderCanvas(height, width, points, scaleX, scaleY) {
   // Define the canvas
   let canv = document.createElement("canvas");
   canv.setAttribute("id", "canvasID");
@@ -33,12 +33,15 @@ function renderCanvas(height, width, points) {
   let container = document.createElement("div");
   container.setAttribute("id", "container");
   container.style = `width: ${width}px; height: ${height}px; position: absolute; left: 100px; top: 100px;`;
+
   document.body.appendChild(container);
 
   // Function renders all the divs you can highlight over
   renderDivs(width, points, height, dpi);
   renderVerticalValues(height, points);
   renderHorizontalValues(calcWidth, points);
+  // Scales the graph to always fit a predetermined size
+  ctx.scale(scaleX, scaleY);
 }
 
 // Returns the maximum vertical value of the graph
@@ -117,10 +120,10 @@ function renderHorizontalValues(calcWidth, points) {
   let max = points.length - 1;
   let container = document.getElementById("container");
   for (let v = 0; v < max; v += scaling) {
-    let width = v * calcWidth + calcWidth;
+    let width = v * calcWidth + calcWidth / 2;
     console.log("v: " + v);
     let info = document.createElement("p");
-    info.innerHTML = `${v}`;
+    info.innerHTML = `${points[v].x}`;
     container.appendChild(info);
     info.style = `bottom: 0; left: ${width}px; position: absolute;`;
   }
