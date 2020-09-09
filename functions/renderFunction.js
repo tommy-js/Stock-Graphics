@@ -183,7 +183,7 @@ function renderDivs(width, points, height, dpi, scaleY) {
     });
 
     div.addEventListener("mouseup", function () {
-      zoomUp(p);
+      zoomUp(p, points);
     });
     // Appends each div to the container div
     container.appendChild(div);

@@ -11,9 +11,9 @@ let points = [
   { x: 3, y: 395 },
   { x: 4, y: 78 },
   { x: "jan 4, 2020", y: 353 },
-  { x: 6, y: 23 },
+  { x: 6, y: 223 },
   { x: 7, y: 556 },
-  { x: 8, y: 78 },
+  { x: 8, y: 398 },
   { x: 9, y: 353 },
   { x: 10, y: 23 },
 ];
@@ -32,15 +32,15 @@ function calculateCanvasHeight(points) {
     })
   );
   let indexedHeight = calculatedMaxHeight / 2 + 20;
-  return indexedHeight;
+  return { indexed: indexedHeight, calculated: calculatedMaxHeight };
 }
 
 let canvHeight = calculateCanvasHeight(points);
-let appropriateWidth = canvHeight * 2;
+let appropriateWidth = canvHeight.indexed * 2;
 
-let scaleX = appropriateWidth / width;
-let scaleY = canvHeight / height;
+let scaleX = canvHeight.calculated / width;
+let scaleY = canvHeight.calculated / height;
 console.log("scaleX: " + scaleX);
 console.log("scaleY: " + scaleY);
 
-renderCanvas(canvHeight, appropriateWidth, points, scaleX, scaleY);
+renderCanvas(canvHeight.indexed, appropriateWidth, points, scaleX, scaleY);
