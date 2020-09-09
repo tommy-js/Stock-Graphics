@@ -12,7 +12,14 @@ import { zoomDown, zoomUp } from "./zoom.js";
 // and add more to the sides once the edge of the first container is reached. This way
 // it will always appear fluid. Scrolling in will work the same way.
 
-export function renderCanvas(height, width, points, scaleX, scaleY) {
+export function renderCanvas(
+  height,
+  width,
+  points,
+  scaleX,
+  scaleY,
+  graphicalEffects
+) {
   // Define the canvas
   let canv = document.createElement("canvas");
   canv.setAttribute("id", "canvasID");
@@ -27,6 +34,8 @@ export function renderCanvas(height, width, points, scaleX, scaleY) {
   let ctx = canvas.getContext("2d");
   canvas.setAttribute("height", height * dpi);
   canvas.setAttribute("width", width * dpi);
+  ctx.fillStyle = `${graphicalEffects.backgroundColor}`;
+  ctx.fillRect(0, 0, width * dpi, height * dpi);
   // Calculate the width so that we can define the div widths
   let calcWidth = calculateWidth(width, points.length);
   // console.log(calculateWidth(width, points.length));
@@ -45,13 +54,31 @@ export function renderCanvas(height, width, points, scaleX, scaleY) {
   container.appendChild(infoDiv);
 
   // Function renders all the divs you can highlight over
-  renderDivs(width, points, height, dpi, scaleX, scaleY);
+  renderDivs(
+    width,
+    points,
+    height,
+    dpi,
+    scaleX,
+    scaleY,
+    graphicalEffects.lineColor,
+    graphicalEffects.lineWidth
+  );
   renderVerticalValues(height, points);
   renderHorizontalValues(calcWidth, points);
   // Scales the graph to always fit a predetermined size
   // ctx.scale(scaleX, scaleY);
 
-  function renderDivs(width, points, height, dpi, scaleX, scaleY) {
+  function renderDivs(
+    width,
+    points,
+    height,
+    dpi,
+    scaleX,
+    scaleY,
+    lineColor,
+    lineWidth
+  ) {
     let container = document.getElementById("container");
     let calcWidth = calculateWidth(width, points.length);
     for (let p = 0; p < points.length; p++) {
@@ -101,7 +128,7 @@ export function renderCanvas(height, width, points, scaleX, scaleY) {
 
       // Function for when we release the mouse button on a div, to stop "recording"
       div.addEventListener("mouseup", function () {
-        zoomUp(p, height, width, points, scaleX, scaleY);
+        zoomUp(p, height, width, points, scaleX, scaleY, graphicalEffects);
       });
       // Appends each div to the container div
       container.appendChild(div);
@@ -110,7 +137,9 @@ export function renderCanvas(height, width, points, scaleX, scaleY) {
         positions.positioningx1,
         positions.positioningy1,
         positions.positioningx2,
-        positions.positioningy2
+        positions.positioningy2,
+        lineColor,
+        lineWidth
       );
       console.log(positions);
     }
@@ -252,9 +281,11 @@ function findPositions(points, p, height, calcWidth, left, dpi) {
 }
 
 // Renders a line, which connect into a graph-pattern
-function renderLine(startX, startY, endX, endY) {
+function renderLine(startX, startY, endX, endY, lineColor, lineWidth) {
   let canvas = document.getElementById("canvasID");
   let ctx = canvas.getContext("2d");
+  ctx.strokeStyle = lineColor;
+  ctx.lineWidth = lineWidth;
   ctx.beginPath();
   ctx.moveTo(startX, startY);
   ctx.lineTo(endX, endY);

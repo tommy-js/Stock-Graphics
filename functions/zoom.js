@@ -2,7 +2,7 @@ import { renderCanvas } from "./renderFunction.js";
 
 let indexed = [1, 1];
 
-function zoom(height, width, points, scaleX, scaleY) {
+function zoom(height, width, points, scaleX, scaleY, graphicalEffects) {
   // Splices the array so that we get only the selected region
   if (indexed[0] > indexed[1]) {
     let spliceEnd = points.splice(indexed[0] + 1);
@@ -14,7 +14,7 @@ function zoom(height, width, points, scaleX, scaleY) {
     console.log("err");
   }
   console.log(points);
-  renderCanvas(height, width, points, scaleX, scaleY);
+  renderCanvas(height, width, points, scaleX, scaleY, graphicalEffects);
 }
 
 export function zoomDown(index) {
@@ -22,7 +22,15 @@ export function zoomDown(index) {
   indexed[0] = index;
 }
 
-export function zoomUp(index, height, width, points, scaleX, scaleY) {
+export function zoomUp(
+  index,
+  height,
+  width,
+  points,
+  scaleX,
+  scaleY,
+  graphicalEffects
+) {
   console.log("mouse up: " + index);
   indexed[1] = index;
   let container = document.getElementById("container");
@@ -31,5 +39,5 @@ export function zoomUp(index, height, width, points, scaleX, scaleY) {
     let div = document.getElementById(`divEl${u}`);
     container.remove(div);
   }
-  zoom(height, width, points, scaleX, scaleY);
+  zoom(height, width, points, scaleX, scaleY, graphicalEffects);
 }

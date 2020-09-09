@@ -23,6 +23,12 @@ let points = [
 const height = 300;
 const width = 150;
 
+const graphicalEffects = {
+  backgroundColor: "teal",
+  lineColor: "red",
+  lineWidth: 5,
+};
+
 function calculateCanvasHeight(points) {
   // Calculates the maximum y-variable of the canvas
   let calculatedMaxHeight = Math.max.apply(
@@ -43,4 +49,11 @@ let scaleY = canvHeight.calculated / height;
 console.log("scaleX: " + scaleX);
 console.log("scaleY: " + scaleY);
 
-renderCanvas(canvHeight.indexed, appropriateWidth, points, scaleX, scaleY);
+renderCanvas(
+  canvHeight.indexed,
+  appropriateWidth,
+  points,
+  scaleX,
+  scaleY,
+  graphicalEffects
+);
