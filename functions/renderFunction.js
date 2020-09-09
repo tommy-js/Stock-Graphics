@@ -12,7 +12,7 @@ import { zoomDown, zoomUp } from "./zoom.js";
 // and add more to the sides once the edge of the first container is reached. This way
 // it will always appear fluid. Scrolling in will work the same way.
 
-function renderCanvas(height, width, points, scaleX, scaleY) {
+export function renderCanvas(height, width, points, scaleX, scaleY) {
   // Define the canvas
   let canv = document.createElement("canvas");
   canv.setAttribute("id", "canvasID");
@@ -51,6 +51,56 @@ function renderCanvas(height, width, points, scaleX, scaleY) {
   renderHorizontalValues(calcWidth, points);
   // Scales the graph to always fit a predetermined size
   ctx.scale(scaleX, scaleY);
+
+  function renderDivs(width, points, height, dpi, scaleY) {
+    let container = document.getElementById("container");
+    let calcWidth = calculateWidth(width, points.length);
+    for (let p = 0; p < points.length; p++) {
+      if (document.getElementById(`divEl${p}`)) {
+        container.remove(`divEl${p}`);
+      }
+
+      // Calculate height of the maximum point on each div. This is because the
+      // canvas measures from top to bottom, meaning out graph needs to be flipped
+
+      // Calculates the height of the highest point of the graph within this div
+      let compHeight = points[p].y;
+      // Create divs that we can mouse-over to see information
+      let div = document.createElement("div");
+      // Calculate distance to move each div to the right so that they don't overlap
+      div.setAttribute("id", `divEl${p}`);
+      let left = calcLeft(p, width, points.length);
+      let positions = findPositions(points, p, height, calcWidth, left, dpi);
+      div.style = `position: absolute; width: ${calcWidth}px; height: ${height}px;
+      border: 1px solid black; left: ${left}px`;
+      // Function for when we mouse over a div, which makes a circle appear showing current stock value
+      div.addEventListener("mouseover", function () {
+        renderYCircle(true, left, points[p].y, calcWidth, height, dpi, scaleY);
+      });
+      // Function for when we move out of a div, which removes the circle
+      div.addEventListener("mouseout", function () {
+        renderYCircle(false, left, points[p].y, calcWidth, height, dpi, scaleY);
+      });
+
+      div.addEventListener("mousedown", function () {
+        zoomDown(p);
+      });
+
+      div.addEventListener("mouseup", function () {
+        zoomUp(p, height, width, points, scaleX, scaleY);
+      });
+      // Appends each div to the container div
+      container.appendChild(div);
+      // Renders the line running from current one to the next
+      renderLine(
+        positions.positioningx1,
+        positions.positioningy1,
+        positions.positioningx2,
+        positions.positioningy2
+      );
+      console.log(positions);
+    }
+  }
 }
 
 // Returns the maximum vertical value of the graph
@@ -151,51 +201,6 @@ function declutterHorizontal(points) {
     scaling = 2000;
   }
   return scaling;
-}
-
-function renderDivs(width, points, height, dpi, scaleY) {
-  let container = document.getElementById("container");
-  let calcWidth = calculateWidth(width, points.length);
-  for (let p = 0; p < points.length; p++) {
-    // Calculate height of the maximum point on each div. This is because the
-    // canvas measures from top to bottom, meaning out graph needs to be flipped
-
-    // Calculates the height of the highest point of the graph within this div
-    let compHeight = points[p].y;
-    // Create divs that we can mouse-over to see information
-    let div = document.createElement("div");
-    // Calculate distance to move each div to the right so that they don't overlap
-    let left = calcLeft(p, width, points.length);
-    let positions = findPositions(points, p, height, calcWidth, left, dpi);
-    div.style = `position: absolute; width: ${calcWidth}px; height: ${height}px;
-    border: 1px solid black; left: ${left}px`;
-    // Function for when we mouse over a div, which makes a circle appear showing current stock value
-    div.addEventListener("mouseover", function () {
-      renderYCircle(true, left, points[p].y, calcWidth, height, dpi, scaleY);
-    });
-    // Function for when we move out of a div, which removes the circle
-    div.addEventListener("mouseout", function () {
-      renderYCircle(false, left, points[p].y, calcWidth, height, dpi, scaleY);
-    });
-
-    div.addEventListener("mousedown", function () {
-      zoomDown(p);
-    });
-
-    div.addEventListener("mouseup", function () {
-      zoomUp(p, points);
-    });
-    // Appends each div to the container div
-    container.appendChild(div);
-    // Renders the line running from current one to the next
-    renderLine(
-      positions.positioningx1,
-      positions.positioningy1,
-      positions.positioningx2,
-      positions.positioningy2
-    );
-    console.log(positions);
-  }
 }
 
 function calcLeft(p, width, pointsLength) {

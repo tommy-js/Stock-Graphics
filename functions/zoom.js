@@ -1,6 +1,8 @@
+import { renderCanvas } from "./renderFunction.js";
+
 let indexed = [1, 1];
 
-function zoom(points) {
+function zoom(height, width, points, scaleX, scaleY) {
   console.log(indexed);
   console.log(points);
   if (indexed[0] > indexed[1]) {
@@ -13,6 +15,7 @@ function zoom(points) {
     console.log("err");
   }
   console.log(points);
+  renderCanvas(height, width, points, scaleX, scaleY);
 }
 
 export function zoomDown(index) {
@@ -20,8 +23,8 @@ export function zoomDown(index) {
   indexed[0] = index;
 }
 
-export function zoomUp(index, points) {
+export function zoomUp(index, height, width, points, scaleX, scaleY) {
   console.log("mouse up: " + index);
   indexed[1] = index;
-  zoom(points);
+  zoom(height, width, points, scaleX, scaleY);
 }

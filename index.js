@@ -2,7 +2,7 @@
 // This project will be a small graphics library, designed for the express purpose of
 // rendering stock charts and allowing for user input and interaction.
 
-import renderCanvas from "./functions/renderFunction.js";
+import { renderCanvas } from "./functions/renderFunction.js";
 
 let points = [
   { x: 0, y: 100 },
