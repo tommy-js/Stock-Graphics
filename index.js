@@ -5,17 +5,17 @@
 import { renderCanvas } from "./functions/renderFunction.js";
 
 let points = [
-  { x: 0, y: 100 },
-  { x: 1, y: 0 },
-  { x: 2, y: 120 },
-  { x: 3, y: 395 },
-  { x: 4, y: 78 },
-  { x: "jan 4, 2020", y: 353 },
-  { x: 6, y: 223 },
-  { x: 7, y: 556 },
-  { x: 8, y: 398 },
-  { x: 9, y: 353 },
-  { x: 10, y: 23 },
+  { x: "jan 1", y: 100 },
+  { x: "jan 2", y: 0 },
+  { x: "jan 3", y: 120 },
+  { x: "jan 4", y: 395 },
+  { x: "jan 5", y: 78 },
+  { x: "jan 6", y: 353 },
+  { x: "jan 7", y: 223 },
+  { x: "jan 8", y: 556 },
+  { x: "jan 9", y: 398 },
+  { x: "jan 10", y: 353 },
+  { x: "jan 11", y: 23 },
 ];
 
 // Height and width set for the canvas generally. This is

@@ -41,7 +41,7 @@ export function renderCanvas(height, width, points, scaleX, scaleY) {
   let infoDiv = document.createElement("div");
   infoDiv.setAttribute("id", "infoDiv");
   infoDiv.style =
-    "position: absolute;width: 40px; height: 25px; border: 1px solid grey; background-color: lightgrey; opacity: 0; transition: 0.3s;";
+    "position: absolute; height: 25px; border: 1px solid grey; background-color: lightgrey; opacity: 0; transition: 0.3s;";
   container.appendChild(infoDiv);
 
   // Function renders all the divs you can highlight over
@@ -55,11 +55,6 @@ export function renderCanvas(height, width, points, scaleX, scaleY) {
     let container = document.getElementById("container");
     let calcWidth = calculateWidth(width, points.length);
     for (let p = 0; p < points.length; p++) {
-      // Removes any container divs that may exist from the previous render
-      // if (document.getElementById(`divEl${p}`) != null) {
-      //   container.remove(container.querySelector(`divEl${p}`));
-      // }
-
       // Calculate height of the maximum point on each div. This is because the
       // canvas measures from top to bottom, meaning out graph needs to be flipped
 
@@ -74,11 +69,29 @@ export function renderCanvas(height, width, points, scaleX, scaleY) {
       div.style = `position: absolute; width: ${calcWidth}px; height: ${height}px; border: 1px solid black; left: ${left}px`;
       // Function for when we mouse over a div, which makes a circle appear showing current stock value
       div.addEventListener("mouseover", function () {
-        renderYCircle(true, left, points[p].y, calcWidth, height, dpi, scaleY);
+        renderYCircle(
+          true,
+          left,
+          points[p].y,
+          calcWidth,
+          height,
+          dpi,
+          scaleY,
+          points[p].x
+        );
       });
       // Function for when we move out of a div, which removes the circle
       div.addEventListener("mouseout", function () {
-        renderYCircle(false, left, points[p].y, calcWidth, height, dpi, scaleY);
+        renderYCircle(
+          false,
+          left,
+          points[p].y,
+          calcWidth,
+          height,
+          dpi,
+          scaleY,
+          points[p].x
+        );
       });
 
       // Function for when we click down on a div, to start "recording"
@@ -221,10 +234,11 @@ function findPositions(points, p, height, calcWidth, left, dpi) {
   console.log(left);
   let positioningy1 = posY;
   let leftPosX2 = left + calcWidth;
-  let positioningx2 = calculateCenterAlign(calcWidth, leftPosX2, 5 * dpi, dpi);
+  let positioningx2;
   let positioningy2;
   if (points[p + 1]) {
     positioningy2 = modifiedHeight - points[p + 1].y;
+    positioningx2 = calculateCenterAlign(calcWidth, leftPosX2, 5 * dpi, dpi);
   } else {
     positioningy2 = posY;
   }
@@ -248,11 +262,11 @@ function renderLine(startX, startY, endX, endY) {
 }
 
 // Function renders a circle to show us the current value of stock
-function renderYCircle(mouseIn, x, y, width, height, dpi, scaleY) {
+function renderYCircle(mouseIn, x, y, width, height, dpi, scaleY, date) {
   let info = document.getElementById("infoDiv");
   if (mouseIn === true) {
     // Displays the height of the hovered element
-    info.innerHTML = `${y}`;
+    info.innerHTML = `${date}: $${y}`;
     // Calculates the height necessary to display the number right above the highest point
     let modifiedHeight = y / dpi;
     // Styles the component so that it sits just above the highest point
