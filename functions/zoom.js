@@ -26,5 +26,10 @@ export function zoomDown(index) {
 export function zoomUp(index, height, width, points, scaleX, scaleY) {
   console.log("mouse up: " + index);
   indexed[1] = index;
+  let container = document.getElementById("container");
+  for (let u = 0; u < points.length; u++) {
+    let div = document.getElementById(`divEl${u}`);
+    container.remove(div);
+  }
   zoom(height, width, points, scaleX, scaleY);
 }

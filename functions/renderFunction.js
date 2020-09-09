@@ -44,21 +44,21 @@ export function renderCanvas(height, width, points, scaleX, scaleY) {
     "position: absolute;width: 40px; height: 25px; border: 1px solid grey; background-color: lightgrey; opacity: 0; transition: 0.3s;";
   container.appendChild(infoDiv);
 
-  let scaledHeight = scaleY * height * dpi;
   // Function renders all the divs you can highlight over
-  renderDivs(width, points, height, dpi, scaleY);
+  renderDivs(width, points, height, dpi, scaleX, scaleY);
   renderVerticalValues(height, points);
   renderHorizontalValues(calcWidth, points);
   // Scales the graph to always fit a predetermined size
-  ctx.scale(scaleX, scaleY);
+  // ctx.scale(scaleX, scaleY);
 
-  function renderDivs(width, points, height, dpi, scaleY) {
+  function renderDivs(width, points, height, dpi, scaleX, scaleY) {
     let container = document.getElementById("container");
     let calcWidth = calculateWidth(width, points.length);
     for (let p = 0; p < points.length; p++) {
-      if (document.getElementById(`divEl${p}`)) {
-        container.remove(`divEl${p}`);
-      }
+      // Removes any container divs that may exist from the previous render
+      // if (document.getElementById(`divEl${p}`) != null) {
+      //   container.remove(container.querySelector(`divEl${p}`));
+      // }
 
       // Calculate height of the maximum point on each div. This is because the
       // canvas measures from top to bottom, meaning out graph needs to be flipped
@@ -71,8 +71,7 @@ export function renderCanvas(height, width, points, scaleX, scaleY) {
       div.setAttribute("id", `divEl${p}`);
       let left = calcLeft(p, width, points.length);
       let positions = findPositions(points, p, height, calcWidth, left, dpi);
-      div.style = `position: absolute; width: ${calcWidth}px; height: ${height}px;
-      border: 1px solid black; left: ${left}px`;
+      div.style = `position: absolute; width: ${calcWidth}px; height: ${height}px; border: 1px solid black; left: ${left}px`;
       // Function for when we mouse over a div, which makes a circle appear showing current stock value
       div.addEventListener("mouseover", function () {
         renderYCircle(true, left, points[p].y, calcWidth, height, dpi, scaleY);
@@ -82,10 +81,12 @@ export function renderCanvas(height, width, points, scaleX, scaleY) {
         renderYCircle(false, left, points[p].y, calcWidth, height, dpi, scaleY);
       });
 
+      // Function for when we click down on a div, to start "recording"
       div.addEventListener("mousedown", function () {
         zoomDown(p);
       });
 
+      // Function for when we release the mouse button on a div, to stop "recording"
       div.addEventListener("mouseup", function () {
         zoomUp(p, height, width, points, scaleX, scaleY);
       });
