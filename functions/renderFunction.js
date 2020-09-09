@@ -1,3 +1,4 @@
+import { zoomDown, zoomUp } from "./zoom.js";
 // The render function renders the initial graph, starting with either one month
 // of data or the maximum data there is available, whichever is smaller.
 
@@ -32,7 +33,7 @@ function renderCanvas(height, width, points, scaleX, scaleY) {
   // Create a container div to hold all the smaller divs and sit over the graph
   let container = document.createElement("div");
   container.setAttribute("id", "container");
-  container.style = `width: ${width}px; height: ${height}px; position: absolute; left: 100px; top: 100px;`;
+  container.style = `width: ${width}px; height: ${height}px; position: absolute; left: 100px; top: 100px;-webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none;-moz-user-select: none; -ms-user-select: none; user-select: none; outline: none;`;
 
   // Appends the container div into the main document
   document.body.appendChild(container);
@@ -40,7 +41,7 @@ function renderCanvas(height, width, points, scaleX, scaleY) {
   let infoDiv = document.createElement("div");
   infoDiv.setAttribute("id", "infoDiv");
   infoDiv.style =
-    "position: absolute;width: 100px; height: 50px; border: 1px solid red; opacity: 0; transition: 0.3s;";
+    "position: absolute;width: 40px; height: 25px; border: 1px solid grey; background-color: lightgrey; opacity: 0; transition: 0.3s;";
   container.appendChild(infoDiv);
 
   let scaledHeight = scaleY * height * dpi;
@@ -175,6 +176,14 @@ function renderDivs(width, points, height, dpi, scaleY) {
     // Function for when we move out of a div, which removes the circle
     div.addEventListener("mouseout", function () {
       renderYCircle(false, left, points[p].y, calcWidth, height, dpi, scaleY);
+    });
+
+    div.addEventListener("mousedown", function () {
+      zoomDown(p);
+    });
+
+    div.addEventListener("mouseup", function () {
+      zoomUp(p);
     });
     // Appends each div to the container div
     container.appendChild(div);
