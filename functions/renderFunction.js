@@ -40,11 +40,12 @@ function renderCanvas(height, width, points, scaleX, scaleY) {
   let infoDiv = document.createElement("div");
   infoDiv.setAttribute("id", "infoDiv");
   infoDiv.style =
-    "position: absolute;width: 100px; height: 50px; border: 1px solid red;";
+    "position: absolute;width: 100px; height: 50px; border: 1px solid red; opacity: 0; transition: 0.3s;";
   container.appendChild(infoDiv);
 
+  let scaledHeight = scaleY * height * dpi;
   // Function renders all the divs you can highlight over
-  renderDivs(width, points, height, dpi);
+  renderDivs(width, points, height, dpi, scaleY);
   renderVerticalValues(height, points);
   renderHorizontalValues(calcWidth, points);
   // Scales the graph to always fit a predetermined size
@@ -151,12 +152,15 @@ function declutterHorizontal(points) {
   return scaling;
 }
 
-function renderDivs(width, points, height, dpi) {
+function renderDivs(width, points, height, dpi, scaleY) {
   let container = document.getElementById("container");
   let calcWidth = calculateWidth(width, points.length);
   for (let p = 0; p < points.length; p++) {
     // Calculate height of the maximum point on each div. This is because the
     // canvas measures from top to bottom, meaning out graph needs to be flipped
+
+    // Calculates the height of the highest point of the graph within this div
+    let compHeight = points[p].y;
     // Create divs that we can mouse-over to see information
     let div = document.createElement("div");
     // Calculate distance to move each div to the right so that they don't overlap
@@ -166,11 +170,11 @@ function renderDivs(width, points, height, dpi) {
     border: 1px solid black; left: ${left}px`;
     // Function for when we mouse over a div, which makes a circle appear showing current stock value
     div.addEventListener("mouseover", function () {
-      renderYCircle(true, left, points[p].y, calcWidth, height, dpi);
+      renderYCircle(true, left, points[p].y, calcWidth, height, dpi, scaleY);
     });
     // Function for when we move out of a div, which removes the circle
     div.addEventListener("mouseout", function () {
-      renderYCircle(false, left, points[p].y, calcWidth, height, dpi);
+      renderYCircle(false, left, points[p].y, calcWidth, height, dpi, scaleY);
     });
     // Appends each div to the container div
     container.appendChild(div);
@@ -218,6 +222,7 @@ function findPositions(points, p, height, calcWidth, left, dpi) {
   };
 }
 
+// Renders a line, which connect into a graph-pattern
 function renderLine(startX, startY, endX, endY) {
   let canvas = document.getElementById("canvasID");
   let ctx = canvas.getContext("2d");
@@ -228,28 +233,22 @@ function renderLine(startX, startY, endX, endY) {
 }
 
 // Function renders a circle to show us the current value of stock
-function renderYCircle(mouseIn, x, y, width, height, dpi) {
-  // console.log(x);
-  // Scale the radius of the circle appropriately for the screen size
-  // let radius = 5 * dpi;
-  // let canv = document.getElementById("canvasID");
-  // let circ = canv.getContext("2d");
-  // let positioning = calculateCenterAlign(width, x, radius, dpi);
-  // if (mouseIn === true) {
-  //   circ.beginPath();
-  //   circ.arc(positioning, y, radius, 0, 2 * Math.PI);
-  //   circ.stroke();
-  // } else {
-  //   // Calculates where to place the circle on the canvas so that it is
-  //   // centered within the div the user mouses over
-  //   circ.clearRect(x * dpi, 0, height * dpi, width * dpi);
-  // }
-
-  // THEORETICAL
+function renderYCircle(mouseIn, x, y, width, height, dpi, scaleY) {
   let info = document.getElementById("infoDiv");
   if (mouseIn === true) {
+    // Displays the height of the hovered element
     info.innerHTML = `${y}`;
+    // Calculates the height necessary to display the number right above the highest point
+    let modifiedHeight = y / dpi;
+    // Styles the component so that it sits just above the highest point
+    info.style.bottom = `${modifiedHeight}px`;
+    // Styles the component so that it sits just left of the highest point
+    info.style.left = `${x}px`;
+    // Styles the div so that it is visible
+    info.style.opacity = "1";
   } else {
+    // Renders the component invisible
+    info.style.opacity = "0";
     info.innerHTML = ``;
   }
 }
