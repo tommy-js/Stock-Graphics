@@ -7,10 +7,7 @@ import { zoomDown, zoomUp, zoom } from "./zoom.js";
 // calculate the distance between each point and the ones next to it, and draw
 // a line between them.
 
-// The render function will always render two containers to the left and two to the
-// right of the maximum available in view. When the user scrolls out it will re-render
-// and add more to the sides once the edge of the first container is reached. This way
-// it will always appear fluid. Scrolling in will work the same way.
+// The render function will always render two containers to the left and two to the right of the maximum available in view. When the user scrolls out it will re-render and add more to the sides once the edge of the first container is reached. This way it will always appear fluid. Scrolling in will work the same way.
 
 export function renderCanvas(
   height,
@@ -19,15 +16,15 @@ export function renderCanvas(
   points,
   graphicalEffects
 ) {
-  // Define the canvas
+  // Define the canvas.
   let canv = document.createElement("canvas");
   canv.setAttribute("id", "canvasID");
   canv.style = `border: 1px solid black; width: ${width}px; height: ${height}px;
   position: absolute; top: 100px; left: 100px;`;
   // Handle resizing so that the canvas will not be blury and will be
-  // Attach the canvas to the body
+  // Attach the canvas to the body.
   document.body.appendChild(canv);
-  // within necessary aspect ratio
+  // within necessary aspect ratio.
   let dpi = window.devicePixelRatio;
   let canvas = document.getElementById("canvasID");
   let ctx = canvas.getContext("2d");
@@ -35,18 +32,17 @@ export function renderCanvas(
   canvas.setAttribute("width", width * dpi);
   ctx.fillStyle = `${graphicalEffects.backgroundColor}`;
   ctx.fillRect(0, 0, width * dpi, height * dpi);
-  // Calculate the width so that we can define the div widths
+  // Calculate the width so that we can define the div widths.
   let calcWidth = calculateWidth(width, points.length);
-  // console.log(calculateWidth(width, points.length));
-  // Create a container div to hold all the smaller divs and sit over the graph
+  // Create a container div to hold all the smaller divs and sit over the graph.
   let container = document.createElement("div");
   container.setAttribute("id", "container");
   container.style = `width: ${width}px; height: ${height}px; position: absolute; left: 100px; top: 100px;-webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none;-moz-user-select: none; -ms-user-select: none; user-select: none; outline: none;`;
 
-  // Appends the container div into the main document
+  // Appends the container div into the main document.
   document.body.appendChild(container);
 
-  // Creates a button that we can click to zoom in on the graph
+  // Creates a button that we can click to zoom in on the graph.
   let zoomButton = document.createElement("button");
   zoomButton.setAttribute("id", "zoom_button");
   zoomButton.style = `width: 50px; height: 40px; position: absolute; top: 0; left: 0; z-index: 9999`;
@@ -57,14 +53,14 @@ export function renderCanvas(
   });
   container.appendChild(zoomButton);
 
-  // Creates the information div that tells us what the value of the graph is
+  // Creates the information div that tells us what the value of the graph is.
   let infoDiv = document.createElement("div");
   infoDiv.setAttribute("id", "infoDiv");
   infoDiv.style =
     "position: absolute; height: 25px; border: 1px solid grey; background-color: lightgrey; opacity: 0; transition: 0.3s;";
   container.appendChild(infoDiv);
 
-  // Function renders all the divs you can highlight over
+  // Function renders all the divs you can highlight over.
   renderDivs(
     width,
     points,
@@ -90,18 +86,18 @@ export function renderCanvas(
     let calcWidth = calculateWidth(width, points.length);
     for (let p = 0; p < points.length; p++) {
       // Calculate height of the maximum point on each div. This is because the
-      // canvas measures from top to bottom, meaning out graph needs to be flipped
+      // canvas measures from top to bottom, meaning out graph needs to be flipped.
 
-      // Calculates the height of the highest point of the graph within this div
+      // Calculates the height of the highest point of the graph within this div.
       let compHeight = points[p].y;
-      // Create divs that we can mouse-over to see information
+      // Create divs that we can mouse-over to see information.
       let div = document.createElement("div");
-      // Calculate distance to move each div to the right so that they don't overlap
+      // Calculate distance to move each div to the right so that they don't. overlap
       div.setAttribute("id", `divEl${p}`);
       let left = calcLeft(p, width, points.length);
       let positions = findPositions(prePoints, p, height, calcWidth, left, dpi);
       div.style = `position: absolute; width: ${calcWidth}px; height: ${height}px; border: 1px solid black; left: ${left}px`;
-      // Function for when we mouse over a div, which makes a circle appear showing current stock value
+      // Function for when we mouse over a div, which makes a circle appear. showing current stock value
       div.addEventListener("mouseover", function () {
         renderInfoDiv(
           true,
@@ -114,7 +110,7 @@ export function renderCanvas(
           prePoints[p].y
         );
       });
-      // Function for when we move out of a div, which removes the circle
+      // Function for when we move out of a div, which removes the circle.
       div.addEventListener("mouseout", function () {
         renderInfoDiv(
           false,
@@ -128,18 +124,18 @@ export function renderCanvas(
         );
       });
 
-      // Function for when we click down on a div, to start "recording"
+      // Function for when we click down on a div, to start "recording".
       div.addEventListener("mousedown", function () {
         zoomDown(p);
       });
 
-      // Function for when we release the mouse button on a div, to stop "recording"
+      // Function for when we release the mouse button on a div, to stop "recording".
       div.addEventListener("mouseup", function () {
         zoomUp(p);
       });
-      // Appends each div to the container div
+      // Appends each div to the container div.
       container.appendChild(div);
-      // Renders the line running from current one to the next
+      // Renders the line running from current one to the next.
       renderLine(
         positions.positioningx1,
         positions.positioningy1,
@@ -153,7 +149,7 @@ export function renderCanvas(
   }
 }
 
-// Returns the maximum vertical value of the graph
+// Returns the maximum vertical value of the graph.
 function maxPoints(points) {
   let max = Math.max.apply(
     Math,
@@ -164,7 +160,7 @@ function maxPoints(points) {
   return max;
 }
 
-// Returns the minimum vertical value of the graph
+// Returns the minimum vertical value of the graph.
 function minPoints(points) {
   let min = Math.min.apply(
     Math,
@@ -175,7 +171,7 @@ function minPoints(points) {
   return min;
 }
 
-// Returns a value defining the best scaling to use for the vertical bar on the graph
+// Returns a value defining the best scaling to use for the vertical bar on the graph.
 function declutterVertical(max, min, points) {
   let scaling;
   let verticalDistance = max - min;
@@ -200,14 +196,14 @@ function declutterVertical(max, min, points) {
   return scaling;
 }
 
-// Calculates and returns the height each value should be displayed at
+// Calculates and returns the height each value should be displayed at.
 function verticalValueHeight(canvasHeight, height) {
   let calculatedHeight = height - canvasHeight;
   console.log(calculatedHeight);
   return calculatedHeight;
 }
 
-// Actually renders out the vertical values for the graph
+// Actually renders out the vertical values for the graph.
 function renderVerticalValues(canvasHeight, points) {
   let max = maxPoints(points);
   let min = minPoints(points);
@@ -223,6 +219,7 @@ function renderVerticalValues(canvasHeight, points) {
   }
 }
 
+// Renders out the horizontal values on the graph.
 function renderHorizontalValues(calcWidth, points) {
   let scaling = declutterHorizontal(points);
   console.log("scaling:" + scaling);
@@ -238,6 +235,7 @@ function renderHorizontalValues(calcWidth, points) {
   }
 }
 
+// Prevents the graph from becoming too cluttered.
 function declutterHorizontal(points) {
   let horizontalDistance = points.length;
   let scaling;
@@ -253,6 +251,7 @@ function declutterHorizontal(points) {
   return scaling;
 }
 
+// Calculated the distance right each div should move so that they all sit next to one another.
 function calcLeft(p, width, pointsLength) {
   let calcWidth = calculateWidth(width, pointsLength);
   let calcLeft = p * calcWidth;
@@ -263,9 +262,9 @@ function findPositions(points, p, height, calcWidth, left, dpi) {
   // vertically to actually appear correct.
   let modifiedHeight = height * dpi;
   let posY = modifiedHeight - points[p].y;
-  // Calculates the center of the div
-  // positioningx1 finds the x-pos for the current div
-  // positioningx2 finds the x-pos for the next div
+  // Calculates the center of the div.
+  // positioningx1 finds the x-pos for the current div.
+  // positioningx2 finds the x-pos for the next div.
   let positioningx1 = calculateCenterAlign(calcWidth, left, 5 * dpi, dpi);
   console.log(left);
   let positioningy1 = posY;
@@ -287,7 +286,7 @@ function findPositions(points, p, height, calcWidth, left, dpi) {
   };
 }
 
-// Renders a line, which connect into a graph-pattern
+// Renders a line, which connect into a graph-pattern.
 function renderLine(startX, startY, endX, endY, lineColor, lineWidth) {
   let canvas = document.getElementById("canvasID");
   let ctx = canvas.getContext("2d");
@@ -299,35 +298,35 @@ function renderLine(startX, startY, endX, endY, lineColor, lineWidth) {
   ctx.stroke();
 }
 
-// Function renders a circle to show us the current value of stock
+// Function renders a circle to show us the current value of stock.
 function renderInfoDiv(mouseIn, x, y, width, height, dpi, date, actualVal) {
   let info = document.getElementById("infoDiv");
   if (mouseIn === true) {
-    // Displays the height of the hovered element
+    // Displays the height of the hovered element.
     info.innerHTML = `${date}: $${y}`;
-    // Calculates the height necessary to display the number right above the highest point
+    // Calculates the height necessary to display the number right above the highest point.
     let modifiedHeight = actualVal / dpi;
-    // Styles the component so that it sits just above the highest point
+    // Styles the component so that it sits just above the highest point.
     info.style.bottom = `${modifiedHeight}px`;
-    // Styles the component so that it sits just left of the highest point
+    // Styles the component so that it sits just left of the highest point.
     info.style.left = `${x}px`;
-    // Styles the div so that it is visible
+    // Styles the div so that it is visible.
     info.style.opacity = "1";
   } else {
-    // Renders the component invisible
+    // Renders the component invisible.
     info.style.opacity = "0";
     info.innerHTML = ``;
   }
 }
 
-// Calculates the center of the div
+// Calculates the center of the div.
 function calculateCenterAlign(divWidth, left, radius, dpi) {
   let calculatedPos =
     left * dpi + Math.floor(divWidth / 2) * dpi - Math.floor(radius / 2);
-  // console.log(calculatedPos);
   return calculatedPos;
 }
 
+// Calculates the width of each component div.
 function calculateWidth(width, xPoints) {
   let graphWidth = width / xPoints;
   return graphWidth;
