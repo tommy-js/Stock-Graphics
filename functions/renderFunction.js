@@ -1,4 +1,4 @@
-import { zoomDown, zoomUp } from "./zoom.js";
+import { zoomDown, zoomUp, zoom } from "./zoom.js";
 // The render function renders the initial graph, starting with either one month
 // of data or the maximum data there is available, whichever is smaller.
 
@@ -47,6 +47,18 @@ export function renderCanvas(
   // Appends the container div into the main document
   document.body.appendChild(container);
 
+  // Creates a button that we can click to zoom in on the graph
+  let zoomButton = document.createElement("button");
+  zoomButton.setAttribute("id", "zoom_button");
+  zoomButton.style = `width: 50px; height: 40px; position: absolute; top: 0; left: 0; z-index: 9999`;
+  zoomButton.innerHTML = "zoom";
+  zoomButton.addEventListener("click", function () {
+    zoom(height, width, points, scaleX, scaleY, graphicalEffects);
+    console.log("click zoom");
+  });
+  container.appendChild(zoomButton);
+
+  // Creates the information div that tells us what the value of the graph is
   let infoDiv = document.createElement("div");
   infoDiv.setAttribute("id", "infoDiv");
   infoDiv.style =
