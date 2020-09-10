@@ -2,7 +2,7 @@ import { renderCanvas } from "./renderFunction.js";
 
 let indexed = [0, 0];
 
-export function zoom(height, width, points, scaleX, scaleY, graphicalEffects) {
+export function zoom(height, width, points, graphicalEffects) {
   let container = document.getElementById("container");
 
   // Removes any container divs that exist from the previous render
@@ -35,7 +35,7 @@ export function zoom(height, width, points, scaleX, scaleY, graphicalEffects) {
   }
 
   console.log(points);
-  renderCanvas(height, width, points, scaleX, scaleY, graphicalEffects);
+  renderCanvas(height, width, points, graphicalEffects);
   indexed = [0, 0];
 }
 
@@ -44,16 +44,8 @@ export function zoomDown(index) {
   indexed[0] = index;
 }
 
-export function zoomUp(
-  index,
-  height,
-  width,
-  points,
-  scaleX,
-  scaleY,
-  graphicalEffects
-) {
+export function zoomUp(index, height, width, points, graphicalEffects) {
   console.log("mouse up: " + index);
   indexed[1] = index;
-  // zoom(height, width, points, scaleX, scaleY, graphicalEffects);
+  // zoom(height, width, points, graphicalEffects);
 }

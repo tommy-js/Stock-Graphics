@@ -37,23 +37,50 @@ function calculateCanvasHeight(points) {
       return o.y;
     })
   );
-  let indexedHeight = calculatedMaxHeight / 2 + 20;
+  // let indexedHeight = calculatedMaxHeight / 2 + 20;
+  let indexedHeight = height - 20;
   return { indexed: indexedHeight, calculated: calculatedMaxHeight };
 }
 
+function calculateCanvasBase(points) {
+  // Calculates the lowest point of the y-variable on the canvas
+  let calculatedMinHeight = Math.min.apply(
+    Math,
+    points.map(function (o) {
+      return o.y;
+    })
+  );
+  return calculatedMinHeight;
+}
+
 let canvHeight = calculateCanvasHeight(points);
+let canvBase = calculateCanvasBase(points);
+
+// highest point / height of graph = ratio
+// each point / ratio
+
+// Function takes the points and formats them to fit the graph height we had
+// previously set
+function reformatPoints(points, canvHeight, canvBase) {
+  let rat = canvHeight / height;
+  let mockArr = [];
+  for (let u = 0; u < points.length; u++) {
+    let multip = points[u].y / rat;
+    let newObj = { x: points[u].x, y: multip };
+    mockArr.push(newObj);
+  }
+  console.log("mock array: ");
+  console.log(mockArr);
+  return mockArr;
+}
+
 let appropriateWidth = canvHeight.indexed * 2;
 
-let scaleX = canvHeight.calculated / width;
-let scaleY = canvHeight.calculated / height;
-console.log("scaleX: " + scaleX);
-console.log("scaleY: " + scaleY);
+let modifiedPoints = reformatPoints(points, canvHeight.calculated, canvBase);
 
 renderCanvas(
   canvHeight.indexed,
   appropriateWidth,
-  points,
-  scaleX,
-  scaleY,
+  modifiedPoints,
   graphicalEffects
 );
