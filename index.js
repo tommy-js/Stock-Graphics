@@ -12,7 +12,7 @@ let points = [
   { x: "jan 5", y: 78 },
   { x: "jan 6", y: 353 },
   { x: "jan 7", y: 223 },
-  { x: "jan 8", y: 556 },
+  { x: "jan 8", y: 656 },
   { x: "jan 9", y: 398 },
   { x: "jan 10", y: 353 },
   { x: "jan 11", y: 23 },
@@ -21,7 +21,7 @@ let points = [
 // Height and width set for the canvas generally. This is
 // what the canvas should always scale down/up to
 const height = 300;
-const width = 150;
+const width = 600;
 
 const graphicalEffects = {
   backgroundColor: "teal",
@@ -37,9 +37,7 @@ function calculateCanvasHeight(points) {
       return o.y;
     })
   );
-  // let indexedHeight = calculatedMaxHeight / 2 + 20;
-  let indexedHeight = height - 20;
-  return { indexed: indexedHeight, calculated: calculatedMaxHeight };
+  return calculatedMaxHeight;
 }
 
 function calculateCanvasBase(points) {
@@ -65,22 +63,15 @@ function reformatPoints(points, canvHeight, canvBase) {
   let rat = canvHeight / height;
   let mockArr = [];
   for (let u = 0; u < points.length; u++) {
-    let multip = points[u].y / rat;
+    let multip = parseFloat((points[u].y / rat).toFixed(2));
+    // let multip = points[u].y / rat;
     let newObj = { x: points[u].x, y: multip };
     mockArr.push(newObj);
   }
-  console.log("mock array: ");
   console.log(mockArr);
   return mockArr;
 }
 
-let appropriateWidth = canvHeight.indexed * 2;
+let modifiedPoints = reformatPoints(points, canvHeight, canvBase);
 
-let modifiedPoints = reformatPoints(points, canvHeight.calculated, canvBase);
-
-renderCanvas(
-  canvHeight.indexed,
-  appropriateWidth,
-  modifiedPoints,
-  graphicalEffects
-);
+renderCanvas(height, width, modifiedPoints, points, graphicalEffects);

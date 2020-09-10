@@ -12,7 +12,13 @@ import { zoomDown, zoomUp, zoom } from "./zoom.js";
 // and add more to the sides once the edge of the first container is reached. This way
 // it will always appear fluid. Scrolling in will work the same way.
 
-export function renderCanvas(height, width, points, graphicalEffects) {
+export function renderCanvas(
+  height,
+  width,
+  prePoints,
+  points,
+  graphicalEffects
+) {
   // Define the canvas
   let canv = document.createElement("canvas");
   canv.setAttribute("id", "canvasID");
@@ -46,7 +52,7 @@ export function renderCanvas(height, width, points, graphicalEffects) {
   zoomButton.style = `width: 50px; height: 40px; position: absolute; top: 0; left: 0; z-index: 9999`;
   zoomButton.innerHTML = "zoom";
   zoomButton.addEventListener("click", function () {
-    zoom(height, width, points, graphicalEffects);
+    zoom(height, width, points, prePoints, graphicalEffects);
     console.log("click zoom");
   });
   container.appendChild(zoomButton);
@@ -62,15 +68,24 @@ export function renderCanvas(height, width, points, graphicalEffects) {
   renderDivs(
     width,
     points,
+    prePoints,
     height,
     dpi,
     graphicalEffects.lineColor,
     graphicalEffects.lineWidth
   );
   renderVerticalValues(height, points);
-  renderHorizontalValues(calcWidth, points);
+  renderHorizontalValues(calcWidth, prePoints);
 
-  function renderDivs(width, points, height, dpi, lineColor, lineWidth) {
+  function renderDivs(
+    width,
+    points,
+    prePoints,
+    height,
+    dpi,
+    lineColor,
+    lineWidth
+  ) {
     let container = document.getElementById("container");
     let calcWidth = calculateWidth(width, points.length);
     for (let p = 0; p < points.length; p++) {
@@ -84,30 +99,32 @@ export function renderCanvas(height, width, points, graphicalEffects) {
       // Calculate distance to move each div to the right so that they don't overlap
       div.setAttribute("id", `divEl${p}`);
       let left = calcLeft(p, width, points.length);
-      let positions = findPositions(points, p, height, calcWidth, left, dpi);
+      let positions = findPositions(prePoints, p, height, calcWidth, left, dpi);
       div.style = `position: absolute; width: ${calcWidth}px; height: ${height}px; border: 1px solid black; left: ${left}px`;
       // Function for when we mouse over a div, which makes a circle appear showing current stock value
       div.addEventListener("mouseover", function () {
-        renderYCircle(
+        renderInfoDiv(
           true,
           left,
           points[p].y,
           calcWidth,
           height,
           dpi,
-          points[p].x
+          points[p].x,
+          prePoints[p].y
         );
       });
       // Function for when we move out of a div, which removes the circle
       div.addEventListener("mouseout", function () {
-        renderYCircle(
+        renderInfoDiv(
           false,
           left,
           points[p].y,
           calcWidth,
           height,
           dpi,
-          points[p].x
+          points[p].x,
+          prePoints[p].y
         );
       });
 
@@ -118,7 +135,7 @@ export function renderCanvas(height, width, points, graphicalEffects) {
 
       // Function for when we release the mouse button on a div, to stop "recording"
       div.addEventListener("mouseup", function () {
-        zoomUp(p, height, width, points, graphicalEffects);
+        zoomUp(p);
       });
       // Appends each div to the container div
       container.appendChild(div);
@@ -283,13 +300,13 @@ function renderLine(startX, startY, endX, endY, lineColor, lineWidth) {
 }
 
 // Function renders a circle to show us the current value of stock
-function renderYCircle(mouseIn, x, y, width, height, dpi, date) {
+function renderInfoDiv(mouseIn, x, y, width, height, dpi, date, actualVal) {
   let info = document.getElementById("infoDiv");
   if (mouseIn === true) {
     // Displays the height of the hovered element
     info.innerHTML = `${date}: $${y}`;
     // Calculates the height necessary to display the number right above the highest point
-    let modifiedHeight = y / dpi;
+    let modifiedHeight = actualVal / dpi;
     // Styles the component so that it sits just above the highest point
     info.style.bottom = `${modifiedHeight}px`;
     // Styles the component so that it sits just left of the highest point
