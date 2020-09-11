@@ -32,7 +32,7 @@ const graphicalEffects = {
   lossColor: "red",
 };
 
-function calculateCanvasHeight(points) {
+export function calculateCanvasHeight(points) {
   // Calculates the maximum y-variable of the canvas.
   let calculatedMaxHeight = Math.max.apply(
     Math,
@@ -59,7 +59,7 @@ let canvBase = calculateCanvasBase(points);
 
 // Function takes the points and formats them to fit the graph height we had
 // previously set.
-function reformatPoints(points, canvHeight, canvBase) {
+export function reformatPoints(points, canvHeight) {
   let ratio = canvHeight / height / 1.8;
   console.log("ratio: " + ratio);
   let mockArr = [];
@@ -72,6 +72,6 @@ function reformatPoints(points, canvHeight, canvBase) {
   return mockArr;
 }
 
-let modifiedPoints = reformatPoints(points, canvHeight, canvBase);
+let modifiedPoints = reformatPoints(points, canvHeight);
 
 renderCanvas(height, width, modifiedPoints, points, graphicalEffects);
