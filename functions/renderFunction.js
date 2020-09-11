@@ -65,8 +65,8 @@ export function renderCanvas(
   let boundaryDiv2 = document.createElement("div");
   boundaryDiv1.setAttribute("id", "boundaryDiv1");
   boundaryDiv2.setAttribute("id", "boundaryDiv2");
-  boundaryDiv1.style = `position: absolute; height: ${height}px; width: 1px; border: 1px solid red; display: none;`;
-  boundaryDiv2.style = `position: absolute; height: ${height}px; width: 1px; border: 1px solid pink; display: none;`;
+  boundaryDiv1.style = `position: absolute; height: ${height}px; width: 3px; backgroundColor: green; display: none;`;
+  boundaryDiv2.style = `position: absolute; height: ${height}px; width: 3px; backgroundColor: green; display: none;`;
 
   container.appendChild(boundaryDiv1);
   container.appendChild(boundaryDiv2);
@@ -137,7 +137,7 @@ export function renderCanvas(
 
       // Function for when we click down on a div, to start "recording".
       div.addEventListener("mousedown", function () {
-        zoomDown(p, calcWidth, points);
+        zoomDown(p, calcWidth, points, left, dpi);
       });
 
       // Function for when we release the mouse button on a div, to stop "recording".
@@ -331,7 +331,7 @@ function renderInfoDiv(mouseIn, x, y, width, height, dpi, date, actualVal) {
 }
 
 // Calculates the center of the div.
-function calculateCenterAlign(divWidth, left, radius, dpi) {
+export function calculateCenterAlign(divWidth, left, radius, dpi) {
   let calculatedPos =
     left * dpi + Math.floor(divWidth / 2) * dpi - Math.floor(radius / 2);
   return calculatedPos;

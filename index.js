@@ -24,7 +24,7 @@ const height = 300;
 const width = 600;
 
 const graphicalEffects = {
-  backgroundColor: "teal",
+  backgroundColor: "grey",
   lineColor: "red",
   lineWidth: 5,
 };
