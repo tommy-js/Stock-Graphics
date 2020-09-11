@@ -4,11 +4,16 @@ let indexed = [0, 0];
 
 export function zoom(height, width, points, prePoints, graphicalEffects) {
   let container = document.getElementById("container");
+  let scalingContainer = document.getElementById("scalingContainer");
 
   // Removes any container divs that exist from the previous render
   for (let u = 0; u < points.length; u++) {
     let div = document.getElementById(`divEl${u}`);
     container.remove(div);
+  }
+  for (let g = 0; g < 3; g++) {
+    let info = document.getElementById(`verticalScale${g}`);
+    scalingContainer.remove(info);
   }
 
   // Checks to make sure that we haven't zoomed in already

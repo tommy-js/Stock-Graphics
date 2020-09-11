@@ -242,6 +242,7 @@ function renderVerticalValues(height, points, prePoints) {
 
   for (let v = 0; v < 3; v++) {
     let info = document.createElement("p");
+    info.setAttribute("id", `verticalScale${v}`);
 
     let displayedVal = (v * scaling).toFixed(2);
     let actualHeight;
