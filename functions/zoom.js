@@ -45,7 +45,15 @@ export function zoom(height, width, points, prePoints, graphicalEffects) {
   indexed = [0, 0];
 }
 
-export function zoomDown(index, calcWidth, points, left, dpi) {
+export function zoomDown(
+  index,
+  calcWidth,
+  points,
+  left,
+  dpi,
+  graphicalEffects
+) {
+  console.log(graphicalEffects);
   // Deletes any boundaries present when the mouse is clicked on the graph, thus reducing annoyance for the user.
   let boundaryDiv1 = document.getElementById("boundaryDiv1");
   let boundaryDiv2 = document.getElementById("boundaryDiv2");
@@ -55,29 +63,36 @@ export function zoomDown(index, calcWidth, points, left, dpi) {
   // Sets the first index to the current container div.
   console.log("mouse down: " + index);
   indexed[0] = index;
-  renderZoomDown(index, calcWidth, points, left, dpi);
+  renderZoomDown(index, calcWidth, points, left, dpi, graphicalEffects);
 }
 
-export function zoomUp(index, calcWidth, points, left, dpi) {
-  // Sets the second index to the current container div.
-  console.log("mouse up: " + index);
-  indexed[1] = index;
-  renderZoomUp(index, calcWidth, points);
-}
-
-function renderZoomDown(index, calcWidth, points, left, dpi) {
+function renderZoomDown(index, calcWidth, points, left, dpi, graphicalEffects) {
   // Renders out the boundary div when the mouse is first clicked.
 
+  console.log(graphicalEffects);
   let boundaryDiv1 = document.getElementById("boundaryDiv1");
   let width = calcWidth * index;
 
   // Calculates the center value of the container div so that the boundary will appear at the highest value.
-  let centered = calculateCenterAlign(calcWidth, width, 1, 1);
+  let centered = calculateCenterAlign(
+    calcWidth,
+    width,
+    graphicalEffects.boundaryWidth,
+    1
+  );
   boundaryDiv1.style.left = `${centered}px`;
   boundaryDiv1.style.display = "block";
 }
 
-function renderZoomUp(index, calcWidth, points, left, dpi) {
+export function zoomUp(index, calcWidth, points, left, dpi, graphicalEffects) {
+  // Sets the second index to the current container div.
+  console.log("zoom up: " + graphicalEffects);
+  console.log("mouse up: " + index);
+  indexed[1] = index;
+  renderZoomUp(index, calcWidth, points, left, dpi, graphicalEffects);
+}
+
+function renderZoomUp(index, calcWidth, points, left, dpi, graphicalEffects) {
   // Renders out the boundary div when the mouse is released.
 
   if (indexed[0] != indexed[1]) {
@@ -85,7 +100,12 @@ function renderZoomUp(index, calcWidth, points, left, dpi) {
     let width = calcWidth * index;
 
     // Calculates the center value of the container div so that the boundary will appear at the highest value.
-    let centered = calculateCenterAlign(calcWidth, width, 1, 1);
+    let centered = calculateCenterAlign(
+      calcWidth,
+      width,
+      graphicalEffects.boundaryWidth,
+      1
+    );
 
     boundaryDiv2.style.left = `${centered}px`;
     boundaryDiv2.style.display = "block";
@@ -102,11 +122,11 @@ function renderZoomUp(index, calcWidth, points, left, dpi) {
 
     let boundaryDiv1 = document.getElementById("boundaryDiv1");
     if (sub < 0) {
-      boundaryDiv1.style.backgroundColor = "red";
-      boundaryDiv2.style.backgroundColor = "red";
+      boundaryDiv1.style.backgroundColor = `${graphicalEffects.lossColor}`;
+      boundaryDiv2.style.backgroundColor = `${graphicalEffects.lossColor}`;
     } else if (sub >= 0) {
-      boundaryDiv1.style.backgroundColor = "green";
-      boundaryDiv2.style.backgroundColor = "green";
+      boundaryDiv1.style.backgroundColor = `${graphicalEffects.gainColor}`;
+      boundaryDiv2.style.backgroundColor = `${graphicalEffects.gainColor}`;
     }
   } else {
     // Handles the situation when the user clicks on the same div twice.

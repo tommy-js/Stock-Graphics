@@ -65,34 +65,18 @@ export function renderCanvas(
   let boundaryDiv2 = document.createElement("div");
   boundaryDiv1.setAttribute("id", "boundaryDiv1");
   boundaryDiv2.setAttribute("id", "boundaryDiv2");
-  boundaryDiv1.style = `position: absolute; height: ${height}px; width: 3px; backgroundColor: green; display: none;`;
-  boundaryDiv2.style = `position: absolute; height: ${height}px; width: 3px; backgroundColor: green; display: none;`;
+  boundaryDiv1.style = `position: absolute; height: ${height}px; width: ${graphicalEffects.boundaryWidth}px; backgroundColor: ${graphicalEffects.gainColor}; display: none;`;
+  boundaryDiv2.style = `position: absolute; height: ${height}px; width: ${graphicalEffects.boundaryWidth}px; backgroundColor: ${graphicalEffects.gainColor}; display: none;`;
 
   container.appendChild(boundaryDiv1);
   container.appendChild(boundaryDiv2);
 
   // Function renders all the divs you can highlight over.
-  renderDivs(
-    width,
-    points,
-    prePoints,
-    height,
-    dpi,
-    graphicalEffects.lineColor,
-    graphicalEffects.lineWidth
-  );
+  renderDivs(width, points, prePoints, height, dpi, graphicalEffects);
   renderVerticalValues(height, points);
   renderHorizontalValues(calcWidth, prePoints);
 
-  function renderDivs(
-    width,
-    points,
-    prePoints,
-    height,
-    dpi,
-    lineColor,
-    lineWidth
-  ) {
+  function renderDivs(width, points, prePoints, height, dpi, graphicalEffects) {
     let container = document.getElementById("container");
     let calcWidth = calculateWidth(width, points.length);
     for (let p = 0; p < points.length; p++) {
@@ -137,12 +121,12 @@ export function renderCanvas(
 
       // Function for when we click down on a div, to start "recording".
       div.addEventListener("mousedown", function () {
-        zoomDown(p, calcWidth, points, left, dpi);
+        zoomDown(p, calcWidth, points, left, dpi, graphicalEffects);
       });
 
       // Function for when we release the mouse button on a div, to stop "recording".
       div.addEventListener("mouseup", function () {
-        zoomUp(p, calcWidth, points);
+        zoomUp(p, calcWidth, points, left, dpi, graphicalEffects);
       });
       // Appends each div to the container div.
       container.appendChild(div);
@@ -152,8 +136,8 @@ export function renderCanvas(
         positions.positioningy1,
         positions.positioningx2,
         positions.positioningy2,
-        lineColor,
-        lineWidth
+        graphicalEffects.lineColor,
+        graphicalEffects.lineWidth
       );
       console.log(positions);
     }

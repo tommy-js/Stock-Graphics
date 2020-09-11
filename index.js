@@ -27,6 +27,9 @@ const graphicalEffects = {
   backgroundColor: "grey",
   lineColor: "red",
   lineWidth: 5,
+  boundaryWidth: 3,
+  gainColor: "green",
+  lossColor: "red",
 };
 
 function calculateCanvasHeight(points) {
