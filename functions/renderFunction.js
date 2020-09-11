@@ -34,10 +34,17 @@ export function renderCanvas(
   ctx.fillRect(0, 0, width * dpi, height * dpi);
   // Calculate the width so that we can define the div widths.
   let calcWidth = calculateWidth(width, points.length);
+
   // Create a container div to hold all the smaller divs and sit over the graph.
   let container = document.createElement("div");
   container.setAttribute("id", "container");
   container.style = `width: ${width}px; height: ${height}px; position: absolute; left: 100px; top: 100px;-webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none;-moz-user-select: none; -ms-user-select: none; user-select: none; outline: none;`;
+
+  // Create a container to hold all the vertical values
+  let scaleContainer = document.createElement("div");
+  scaleContainer.style = `position: absolute;height: ${height}px; left: 100px; top: 100px; width: 20px;`;
+  scaleContainer.setAttribute("id", "scalingContainer");
+  document.body.appendChild(scaleContainer);
 
   // Appends the container div into the main document.
   document.body.appendChild(container);
@@ -45,7 +52,7 @@ export function renderCanvas(
   // Creates a button that we can click to zoom in on the graph.
   let zoomButton = document.createElement("button");
   zoomButton.setAttribute("id", "zoom_button");
-  zoomButton.style = `width: 50px; height: 40px; position: absolute; top: 0; left: 0; z-index: 9999`;
+  zoomButton.style = `width: 50px; height: 40px; position: absolute; top: -50px; left: 0; z-index: 9999`;
   zoomButton.innerHTML = "zoom";
   zoomButton.addEventListener("click", function () {
     zoom(height, width, points, prePoints, graphicalEffects);
@@ -73,7 +80,7 @@ export function renderCanvas(
 
   // Function renders all the divs you can highlight over.
   renderDivs(width, points, prePoints, height, dpi, graphicalEffects);
-  renderVerticalValues(height, points);
+  renderVerticalValues(height, points, prePoints);
   renderHorizontalValues(calcWidth, prePoints);
 
   function renderDivs(width, points, prePoints, height, dpi, graphicalEffects) {
@@ -168,49 +175,85 @@ function minPoints(points) {
 
 // Returns a value defining the best scaling to use for the vertical bar on the graph.
 function declutterVertical(max, min, points) {
-  let scaling;
-  let verticalDistance = max - min;
-  if (verticalDistance >= 0.1) {
-    scaling = 0.025;
-  }
-  if (verticalDistance >= 1 && verticalDistance < 10) {
-    scaling = 2.5;
-  } else if (verticalDistance >= 10 && verticalDistance < 100) {
-    scaling = 25;
-  } else if (verticalDistance >= 100 && verticalDistance < 1000) {
-    scaling = 250;
-  } else if (verticalDistance >= 1000 && verticalDistance < 10000) {
-    scaling = 2500;
-  } else if (verticalDistance >= 10000 && verticalDistance < 100000) {
-    scaling = 25000;
-  } else if (verticalDistance >= 100000 && verticalDistance < 1000000) {
-    scaling = 250000;
-  } else if (verticalDistance >= 1000000) {
-    scaling = 2500000;
-  }
+  let scaling = max / 4;
+  // let verticalDistance = max - min;
+  // if (verticalDistance >= 0.1 && verticalDistance < 1) {
+  //   scaling = 0.025;
+  // }
+  // if (verticalDistance >= 1 && verticalDistance < 5) {
+  //   scaling = 1;
+  // } else if (verticalDistance >= 5 && verticalDistance < 10) {
+  //   scaling = 2.5;
+  // } else if (verticalDistance >= 10 && verticalDistance < 50) {
+  //   scaling = 5;
+  // } else if (verticalDistance >= 50 && verticalDistance < 100) {
+  //   scaling = 15;
+  // } else if (verticalDistance >= 100 && verticalDistance < 200) {
+  //   scaling = 25;
+  // } else if (verticalDistance >= 200 && verticalDistance < 300) {
+  //   scaling = 40;
+  // } else if (verticalDistance >= 300 && verticalDistance < 400) {
+  //   scaling = 50;
+  // } else if (verticalDistance >= 400 && verticalDistance < 500) {
+  //   scaling = 75;
+  // } else if (verticalDistance >= 500 && verticalDistance < 600) {
+  //   scaling = 90;
+  // } else if (verticalDistance >= 300) {
+  //   scaling = 250;
+  // }
   return scaling;
 }
 
 // Calculates and returns the height each value should be displayed at.
-function verticalValueHeight(canvasHeight, height) {
-  let calculatedHeight = height - canvasHeight;
+function verticalValueHeight(canvasHeight, height, v) {
+  // let calculatedHeight = height - canvasHeight;
+  let calculatedHeight = canvasHeight * v;
   console.log(calculatedHeight);
   return calculatedHeight;
 }
 
 // Actually renders out the vertical values for the graph.
-function renderVerticalValues(canvasHeight, points) {
+// function renderVerticalValues(canvasHeight, points) {
+//   let max = maxPoints(points);
+//   let min = minPoints(points);
+//   let scaling = max / 3;
+//   // let scaling = declutterVertical(max, min, points);
+//   let container = document.getElementById("container");
+//   let scalingContainer = document.getElementById("scalingContainer");
+//   for (let v = 3; v >= 0; v--) {
+//     let displayedVal = v * scaling;
+//     let vHeight = verticalValueHeight(canvasHeight, displayedVal, v);
+//     let info = document.createElement("p");
+//     info.innerHTML = `${displayedVal}`;
+//     info.style = `bottom: ${vHeight}px; left: 0; position: absolute;`;
+//     scalingContainer.appendChild(info);
+//   }
+// }
+
+// Get the maximum value on the graph. Then, start from v=0, set the first value since v=0 the height=0 also. Then, multiply successive values of v until v=3.
+
+function renderVerticalValues(height, points, prePoints) {
   let max = maxPoints(points);
-  let min = minPoints(points);
-  let scaling = declutterVertical(max, min, points);
+  let scaling = max / 3;
+  let scaledPoints = maxPoints(prePoints);
+  let actualScaling = scaledPoints / 3;
   let container = document.getElementById("container");
-  for (let v = 3; v >= 0; v--) {
-    let displayedVal = v * scaling;
-    let vHeight = verticalValueHeight(canvasHeight, displayedVal);
+  let scalingContainer = document.getElementById("scalingContainer");
+
+  for (let v = 0; v < 3; v++) {
     let info = document.createElement("p");
+
+    let displayedVal = (v * scaling).toFixed(2);
+    let actualHeight;
+    if (v > 0) {
+      actualHeight = (actualScaling * v) / 1.8;
+    } else if (v === 0) {
+      actualHeight = 0;
+    }
+
     info.innerHTML = `${displayedVal}`;
-    container.appendChild(info);
-    info.style = `bottom: ${vHeight}px; left: 0; position: absolute;`;
+    info.style = `bottom: ${actualHeight}px; left: 0; position: absolute; height: 0;`;
+    scalingContainer.appendChild(info);
   }
 }
 
