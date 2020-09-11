@@ -60,6 +60,17 @@ export function renderCanvas(
     "position: absolute; height: 25px; border: 1px solid grey; background-color: lightgrey; opacity: 0; transition: 0.3s;";
   container.appendChild(infoDiv);
 
+  // Creates the two boundary divs that appear when you drag the mouse.
+  let boundaryDiv1 = document.createElement("div");
+  let boundaryDiv2 = document.createElement("div");
+  boundaryDiv1.setAttribute("id", "boundaryDiv1");
+  boundaryDiv2.setAttribute("id", "boundaryDiv2");
+  boundaryDiv1.style = `position: absolute; height: ${height}px; width: 1px; border: 1px solid red; display: none;`;
+  boundaryDiv2.style = `position: absolute; height: ${height}px; width: 1px; border: 1px solid pink; display: none;`;
+
+  container.appendChild(boundaryDiv1);
+  container.appendChild(boundaryDiv2);
+
   // Function renders all the divs you can highlight over.
   renderDivs(
     width,
@@ -126,12 +137,12 @@ export function renderCanvas(
 
       // Function for when we click down on a div, to start "recording".
       div.addEventListener("mousedown", function () {
-        zoomDown(p);
+        zoomDown(p, calcWidth, points);
       });
 
       // Function for when we release the mouse button on a div, to stop "recording".
       div.addEventListener("mouseup", function () {
-        zoomUp(p);
+        zoomUp(p, calcWidth, points);
       });
       // Appends each div to the container div.
       container.appendChild(div);
