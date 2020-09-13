@@ -2,6 +2,14 @@ import { renderCanvas, calculateCenterAlign } from "./renderFunction.js";
 import { reformatPoints, calculateCanvasHeight } from "../index.js";
 
 let indexed = [0, 0];
+let indexedArray = [{ a: 0, b: 0 }];
+let prevArray;
+let modifiedPrevArray;
+
+export function storeArray(initialArray, modifiedArray) {
+  prevArray = initialArray;
+  modifiedPrevArray = modifiedArray;
+}
 
 export function zoom(height, width, points, prePoints, graphicalEffects) {
   let container = document.getElementById("container");
@@ -33,12 +41,22 @@ export function zoom(height, width, points, prePoints, graphicalEffects) {
 
       points.splice(indexed[0] + 1);
       points.splice(0, indexed[1]);
+      let x = indexed[0];
+      let y = indexed[1];
+      let obj = { a: y, b: x };
+      indexedArray.push(obj);
+      console.log(indexedArray);
     } else if (indexed[1] > indexed[0]) {
       prePoints.splice(indexed[1] + 1);
       prePoints.splice(0, indexed[0]);
 
       points.splice(indexed[1] + 1);
       points.splice(0, indexed[0]);
+      let x = indexed[1];
+      let y = indexed[0];
+      let obj = { a: y, b: x };
+      indexedArray.push(obj);
+      console.log(indexedArray);
     } else {
       console.log("err");
     }
@@ -141,4 +159,13 @@ function renderZoomUp(index, calcWidth, points, left, dpi, graphicalEffects) {
     let boundaryDiv1 = document.getElementById("boundaryDiv1");
     boundaryDiv1.style.display = "none";
   }
+}
+
+function zoomOut() {
+  let indexedLength = indexedArray.length;
+  let prevObj = indexedArray[indexedLength];
+  let modArr = modifiedArray.splice(0, prevObj.b);
+  modArr.splice(prevObj.a, 0);
+  console.log("modarr:");
+  console.log(modArr);
 }

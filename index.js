@@ -3,6 +3,7 @@
 // rendering stock charts and allowing for user input and interaction.
 
 import { renderCanvas } from "./functions/renderFunction.js";
+import { storeArray } from "./functions/zoom.js";
 
 let points = [
   { x: "jan 1", y: 100 },
@@ -73,5 +74,6 @@ export function reformatPoints(points, canvHeight) {
 }
 
 let modifiedPoints = reformatPoints(points, canvHeight);
+storeArray(points, modifiedPoints);
 
 renderCanvas(height, width, modifiedPoints, points, graphicalEffects);

@@ -52,13 +52,24 @@ export function renderCanvas(
   // Creates a button that we can click to zoom in on the graph.
   let zoomButton = document.createElement("button");
   zoomButton.setAttribute("id", "zoom_button");
-  zoomButton.style = `width: 50px; height: 40px; position: absolute; top: -50px; left: 0; z-index: 9999`;
+  zoomButton.style = `width: 50px; height: 40px; position: absolute; top: -50px; left: 0; z-index: 9999;`;
   zoomButton.innerHTML = "zoom";
   zoomButton.addEventListener("click", function () {
     zoom(height, width, points, prePoints, graphicalEffects);
     console.log("click zoom");
   });
   container.appendChild(zoomButton);
+
+  // Creates a buttom that we can click to zoom back out to where we were before.
+  let zoomOutButton = document.createElement("button");
+  zoomOutButton.setAttribute("id", "zoom_out_button");
+  zoomOutButton.style = `width: 50px; height: 40px; position: absolute; top: -50px; left: 50px; z-index: 9999;`;
+  zoomOutButton.innerHTML = "zoom out";
+  zoomOutButton.addEventListener("click", function () {
+    zoomOut();
+    console.log("click zoom out");
+  });
+  container.appendChild(zoomOutButton);
 
   // Creates the information div that tells us what the value of the graph is.
   let infoDiv = document.createElement("div");
