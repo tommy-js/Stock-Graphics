@@ -77,29 +77,13 @@ export function calculateCanvasBase(points) {
 let canvHeight = calculateCanvasHeight(points);
 let canvBase = calculateCanvasBase(points);
 
-// Function takes the points and formats them to fit the graph height we had
-// previously set.
-// export function reformatPoints(points, canvHeight, canvBase) {
-//   let ratio = canvHeight / height / 1.8;
-//   let mockArr = [];
-//   for (let u = 0; u < points.length; u++) {
-//     let multip = parseFloat((points[u].y / ratio - canvBase).toFixed(2));
-//     let newObj = { x: points[u].x, y: multip };
-//     mockArr.push(newObj);
-//   }
-//   return mockArr;
-// }
-
-// let modifiedPoints = reformatPoints(points, canvHeight, canvBase);
-
-// Average all the y-points and then scale each point proportionately to how far it is from that center line.
-// Calculate the y-value / max height and then multiply distance by this
+// Formats the points we have so that they actually fill the graph screen.
 
 export function reformatPoints(points, canvHeight, canvBase) {
   let pointsCopy = [];
   let avg = 0;
   let absoluteMax = height + (1 / 4) * height;
-  let ratioDistance = absoluteMax * 2;
+  let ratioDistance = absoluteMax * 10;
   for (let g = 0; g < points.length; g++) {
     avg = avg + points[g].y;
     console.log("avg: " + avg);

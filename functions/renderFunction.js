@@ -257,9 +257,13 @@ function verticalValueHeight(canvasHeight, height, v) {
 
 function renderVerticalValues(height, points, prePoints) {
   let max = maxPoints(points);
-  let scaling = max / 3;
+  let min = minPoints(points);
+  let sub = max - min;
+  let scaling = sub / 3;
   let scaledPoints = maxPoints(prePoints);
-  let actualScaling = scaledPoints / 3;
+  let scaledMinPoints = minPoints(prePoints);
+  let scaledTotal = scaledPoints - scaledMinPoints;
+  let actualScaling = scaledTotal / 3;
   let container = document.getElementById("container");
   let scalingContainer = document.getElementById("scalingContainer");
 
@@ -267,16 +271,16 @@ function renderVerticalValues(height, points, prePoints) {
     let info = document.createElement("p");
     info.setAttribute("id", `verticalScale${v}`);
 
-    let displayedVal = (v * scaling).toFixed(2);
+    let displayedVal = (v * scaling + min).toFixed(2);
     let actualHeight;
     if (v > 0) {
-      actualHeight = (actualScaling * v) / 1.8;
+      actualHeight = (actualScaling * v + scaledMinPoints) / 1.8;
     } else if (v === 0) {
-      actualHeight = 0;
+      actualHeight = scaledMinPoints / 1.8 + 20;
     }
 
     info.innerHTML = `${displayedVal}`;
-    info.style = `bottom: ${actualHeight}px; left: 0; position: absolute; height: 0;`;
+    info.style = `bottom: ${actualHeight}px; left: 0; position: absolute; height: 0; margin: 0; border-bottom: 1px solid red;`;
     scalingContainer.appendChild(info);
   }
 }
