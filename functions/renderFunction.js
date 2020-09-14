@@ -184,31 +184,6 @@ function minPoints(points) {
 // Returns a value defining the best scaling to use for the vertical bar on the graph.
 function declutterVertical(max, min, points) {
   let scaling = max / 4;
-  // let verticalDistance = max - min;
-  // if (verticalDistance >= 0.1 && verticalDistance < 1) {
-  //   scaling = 0.025;
-  // }
-  // if (verticalDistance >= 1 && verticalDistance < 5) {
-  //   scaling = 1;
-  // } else if (verticalDistance >= 5 && verticalDistance < 10) {
-  //   scaling = 2.5;
-  // } else if (verticalDistance >= 10 && verticalDistance < 50) {
-  //   scaling = 5;
-  // } else if (verticalDistance >= 50 && verticalDistance < 100) {
-  //   scaling = 15;
-  // } else if (verticalDistance >= 100 && verticalDistance < 200) {
-  //   scaling = 25;
-  // } else if (verticalDistance >= 200 && verticalDistance < 300) {
-  //   scaling = 40;
-  // } else if (verticalDistance >= 300 && verticalDistance < 400) {
-  //   scaling = 50;
-  // } else if (verticalDistance >= 400 && verticalDistance < 500) {
-  //   scaling = 75;
-  // } else if (verticalDistance >= 500 && verticalDistance < 600) {
-  //   scaling = 90;
-  // } else if (verticalDistance >= 300) {
-  //   scaling = 250;
-  // }
   return scaling;
 }
 
@@ -220,22 +195,6 @@ function verticalValueHeight(canvasHeight, height, v) {
 }
 
 // Actually renders out the vertical values for the graph.
-// function renderVerticalValues(canvasHeight, points) {
-//   let max = maxPoints(points);
-//   let min = minPoints(points);
-//   let scaling = max / 3;
-//   // let scaling = declutterVertical(max, min, points);
-//   let container = document.getElementById("container");
-//   let scalingContainer = document.getElementById("scalingContainer");
-//   for (let v = 3; v >= 0; v--) {
-//     let displayedVal = v * scaling;
-//     let vHeight = verticalValueHeight(canvasHeight, displayedVal, v);
-//     let info = document.createElement("p");
-//     info.innerHTML = `${displayedVal}`;
-//     info.style = `bottom: ${vHeight}px; left: 0; position: absolute;`;
-//     scalingContainer.appendChild(info);
-//   }
-// }
 
 // Get the maximum value on the graph. Then, start from v=0, set the first value since v=0 the height=0 also. Then, multiply successive values of v until v=3.
 
@@ -247,7 +206,7 @@ function renderVerticalValues(height, points, prePoints) {
   let container = document.getElementById("container");
   let scalingContainer = document.getElementById("scalingContainer");
 
-  for (let v = 0; v < 3; v++) {
+  for (let v = 0; v < 4; v++) {
     let info = document.createElement("p");
     info.setAttribute("id", `verticalScale${v}`);
 

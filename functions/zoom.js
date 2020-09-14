@@ -1,5 +1,9 @@
 import { renderCanvas, calculateCenterAlign } from "./renderFunction.js";
-import { reformatPoints, calculateCanvasHeight } from "../index.js";
+import {
+  reformatPoints,
+  calculateCanvasHeight,
+  calculateCanvasBase,
+} from "../index.js";
 
 let indexed = [0, 0];
 let indexedArray = [{ a: 0, b: 0 }];
@@ -80,7 +84,8 @@ export function zoom(height, width, points, prePoints, graphicalEffects) {
 
   // Runs the height reformatting again so that we can set the zoom to fill the proper amount of screen.
   let cHeight = calculateCanvasHeight(pointCopy);
-  let refPoints = reformatPoints(pointCopy, cHeight);
+  let cBase = calculateCanvasBase(pointCopy);
+  let refPoints = reformatPoints(pointCopy, cHeight, cBase);
   renderCanvas(height, width, refPoints, pointCopy, graphicalEffects);
   indexed = [0, 0];
 }
