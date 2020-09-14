@@ -1,4 +1,4 @@
-import { zoomDown, zoomUp, zoom } from "./zoom.js";
+import { zoomDown, zoomUp, zoom, zoomOut } from "./zoom.js";
 // The render function renders the initial graph, starting with either one month
 // of data or the maximum data there is available, whichever is smaller.
 
@@ -66,7 +66,7 @@ export function renderCanvas(
   zoomOutButton.style = `width: 50px; height: 40px; position: absolute; top: -50px; left: 50px; z-index: 9999;`;
   zoomOutButton.innerHTML = "zoom out";
   zoomOutButton.addEventListener("click", function () {
-    zoomOut();
+    zoomOut(height, width, graphicalEffects);
     console.log("click zoom out");
   });
   container.appendChild(zoomOutButton);

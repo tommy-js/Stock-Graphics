@@ -73,7 +73,13 @@ export function reformatPoints(points, canvHeight) {
   return mockArr;
 }
 
+let initialRender = true;
 let modifiedPoints = reformatPoints(points, canvHeight);
-storeArray(points, modifiedPoints);
+
+if (initialRender === true) {
+  storeArray(points, modifiedPoints);
+  initialRender = false;
+  console.log("initialRender: " + initialRender);
+}
 
 renderCanvas(height, width, modifiedPoints, points, graphicalEffects);
