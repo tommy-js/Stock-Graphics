@@ -16,14 +16,33 @@ export function renderCanvas(
   points,
   graphicalEffects
 ) {
+  // Create the master div for positioning.
+  let masterDiv = document.createElement("div");
+  masterDiv.setAttribute("id", "masterDiv");
+  masterDiv.style = `width: ${width}px; height: ${height}px; position: absolute; top: 100px; margin-left: auto; margin-right: auto; left: 0; right: 0; border: 1px solid green;`;
+  document.body.appendChild(masterDiv);
+
+  let scaledWidth = "85%";
+  let scaledHeight = "85%";
+
+  // Create a container div to hold all the smaller divs and sit over the graph.
+  let container = document.createElement("div");
+  container.setAttribute("id", "container");
+  container.style = `width: ${scaledWidth}; height: ${scaledHeight}; position: relative; border: 1px solid blue; margin-left: auto; margin-right: auto; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none;-moz-user-select: none; -ms-user-select: none; user-select: none; outline: none;`;
+
+  // Appends the container div into the main document.
+  masterDiv.appendChild(container);
+
   // Define the canvas.
   let canv = document.createElement("canvas");
   canv.setAttribute("id", "canvasID");
-  canv.style = `border: 1px solid black; width: ${width}px; height: ${height}px;
-  position: absolute; top: 100px; left: 100px;`;
-  // Handle resizing so that the canvas will not be blury and will be
+  canv.style = `border: 1px solid black; width: 85%; height: 85%;
+  position: absolute;`;
+
   // Attach the canvas to the body.
-  document.body.appendChild(canv);
+  container.appendChild(canv);
+
+  // Handle resizing so that the canvas will not be blury and will be
   // within necessary aspect ratio.
   let dpi = window.devicePixelRatio;
   let canvas = document.getElementById("canvasID");
@@ -35,19 +54,11 @@ export function renderCanvas(
   // Calculate the width so that we can define the div widths.
   let calcWidth = calculateWidth(width, points.length);
 
-  // Create a container div to hold all the smaller divs and sit over the graph.
-  let container = document.createElement("div");
-  container.setAttribute("id", "container");
-  container.style = `width: ${width}px; height: ${height}px; position: absolute; left: 100px; top: 100px;-webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none;-moz-user-select: none; -ms-user-select: none; user-select: none; outline: none;`;
-
   // Create a container to hold all the vertical values
   let scaleContainer = document.createElement("div");
-  scaleContainer.style = `position: absolute;height: ${height}px; left: 100px; top: 100px; width: 20px;`;
+  scaleContainer.style = `position: absolute;height: ${height}px; width: 20px;`;
   scaleContainer.setAttribute("id", "scalingContainer");
-  document.body.appendChild(scaleContainer);
-
-  // Appends the container div into the main document.
-  document.body.appendChild(container);
+  container.appendChild(scaleContainer);
 
   let textBar = document.createElement("div");
   textBar.setAttribute("id", "canvasTextBar");
@@ -150,6 +161,7 @@ export function renderCanvas(
   renderHorizontalValues(calcWidth, prePoints);
 
   function renderDivs(width, points, prePoints, height, dpi, graphicalEffects) {
+    width = width * 0.85;
     let container = document.getElementById("container");
     let calcWidth = calculateWidth(width, points.length);
     for (let p = 0; p < points.length; p++) {
@@ -164,7 +176,7 @@ export function renderCanvas(
       div.setAttribute("id", `divEl${p}`);
       let left = calcLeft(p, width, points.length);
       let positions = findPositions(prePoints, p, height, calcWidth, left, dpi);
-      div.style = `position: absolute; width: ${calcWidth}px; height: ${height}px; border: 1px solid black; left: ${left}px`;
+      div.style = `position: absolute; width: ${calcWidth}px; height: 85%; border: 1px solid black; left: ${left}px`;
       // Function for when we mouse over a div, which makes a circle appear. showing current stock value
       div.addEventListener("mouseover", function () {
         renderInfoDiv(
@@ -391,7 +403,7 @@ export function calculateCenterAlign(divWidth, left, radius, dpi) {
 
 // Calculates the width of each component div.
 function calculateWidth(width, xPoints) {
-  let graphWidth = width / xPoints;
+  let graphWidth = (width / xPoints) * 0.85;
   return graphWidth;
 }
 
