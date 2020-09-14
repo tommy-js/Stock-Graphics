@@ -49,6 +49,32 @@ export function renderCanvas(
   // Appends the container div into the main document.
   document.body.appendChild(container);
 
+  let textBar = document.createElement("div");
+  textBar.setAttribute("id", "canvasTextBar");
+  textBar.style = `width: 200px; position: absolute; top: -50px; margin-left: auto; margin-right: auto; border: 1px solid red; left: 0; right: 0; height: 50px;`;
+  container.appendChild(textBar);
+
+  let displayMode = "block";
+
+  if (graphicalEffects.ticker) {
+    displayMode = "inline-block";
+  }
+
+  let title = document.createElement("p");
+  title.setAttribute("id", "canvasTitle");
+  title.style = `font-size: ${graphicalEffects.fontSize}px; position: relative; display: ${displayMode}; text-align: center; margin-right: 5px;`;
+  title.innerHTML = `${graphicalEffects.title}`;
+  textBar.appendChild(title);
+
+  if (graphicalEffects.ticker) {
+    displayMode = "inline-block";
+    let ticker = document.createElement("p");
+    ticker.setAttribute("id", "canvasTicker");
+    ticker.innerHTML = `#${graphicalEffects.ticker}`;
+    ticker.style = `font-size: ${graphicalEffects.fontSize}px; position: relative; display: inline-block; margin-right: 5px;`;
+    textBar.appendChild(ticker);
+  }
+
   // Creates a button that we can click to zoom in on the graph.
   let zoomButton = document.createElement("button");
   zoomButton.setAttribute("id", "zoom_button");

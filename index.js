@@ -39,12 +39,16 @@ const height = 300;
 const width = 600;
 
 const graphicalEffects = {
+  title: "Apple",
+  ticker: "AAPL",
+  fontSize: 22,
   backgroundColor: "grey",
   lineColor: "red",
   lineWidth: 5,
   boundaryWidth: 3,
   gainColor: "green",
   lossColor: "red",
+  fillColor: "red",
 };
 
 export function calculateCanvasHeight(points) {
@@ -105,7 +109,7 @@ export function reformatPoints(points, canvHeight, canvBase) {
   console.log("scaleFactor: " + scaleFactor);
   for (let t = 0; t < points.length; t++) {
     let distance = points[t].y - finalizedAvg;
-    let mult = distance * 5 * scaleFactor + finalizedAvg + canvBase;
+    let mult = distance * scaleFactor + finalizedAvg + canvBase;
     let newObj = { x: points[t].x, y: mult };
     pointsCopy.push(newObj);
   }
