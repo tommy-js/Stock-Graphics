@@ -75,6 +75,37 @@ export function renderCanvas(
     textBar.appendChild(ticker);
   }
 
+  let periodMarker = document.createElement("div");
+  periodMarker.setAttribute("id", "canvasPeriodMarker");
+
+  let opac;
+  if (graphicalEffects.dateRangeActive === true) {
+    opac = 1;
+  } else {
+    opac = 0;
+  }
+
+  periodMarker.style = `width: 200px; left: 0; bottom: -50px; height: 50px; position: absolute; border: 1px solid red; transition: 0.3s; z-index: 99999`;
+  periodMarker.style.opacity = opac;
+  let index1 = points[0].x;
+  let index2 = points[points.length - 1].x;
+
+  let periodText = document.createElement("p");
+  periodText.innerHTML = `${index1} - ${index2}`;
+  periodMarker.appendChild(periodText);
+
+  container.addEventListener("mouseover", function () {
+    periodMarker.style.opacity = 1;
+  });
+  container.addEventListener("mouseout", function () {
+    if (graphicalEffects.dateRangeActive === false) {
+      periodMarker.style.opacity = 0;
+    } else {
+      periodMarker.style.opacity = 1;
+    }
+  });
+  container.appendChild(periodMarker);
+
   // Creates a button that we can click to zoom in on the graph.
   let zoomButton = document.createElement("button");
   zoomButton.setAttribute("id", "zoom_button");
