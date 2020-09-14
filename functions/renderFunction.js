@@ -56,7 +56,6 @@ export function renderCanvas(
   zoomButton.innerHTML = "zoom";
   zoomButton.addEventListener("click", function () {
     zoom(height, width, points, prePoints, graphicalEffects);
-    console.log("click zoom");
   });
   container.appendChild(zoomButton);
 
@@ -67,7 +66,6 @@ export function renderCanvas(
   zoomOutButton.innerHTML = "zoom out";
   zoomOutButton.addEventListener("click", function () {
     zoomOut(height, width, graphicalEffects);
-    console.log("click zoom out");
   });
   container.appendChild(zoomOutButton);
 
@@ -157,7 +155,6 @@ export function renderCanvas(
         graphicalEffects.lineColor,
         graphicalEffects.lineWidth
       );
-      console.log(positions);
     }
   }
 }
@@ -219,7 +216,6 @@ function declutterVertical(max, min, points) {
 function verticalValueHeight(canvasHeight, height, v) {
   // let calculatedHeight = height - canvasHeight;
   let calculatedHeight = canvasHeight * v;
-  console.log(calculatedHeight);
   return calculatedHeight;
 }
 
@@ -272,12 +268,10 @@ function renderVerticalValues(height, points, prePoints) {
 // Renders out the horizontal values on the graph.
 function renderHorizontalValues(calcWidth, points) {
   let scaling = declutterHorizontal(points);
-  console.log("scaling:" + scaling);
   let max = points.length - 1;
   let container = document.getElementById("container");
   for (let v = 0; v < max; v += scaling) {
     let width = v * calcWidth + calcWidth / 2;
-    console.log("v: " + v);
     let info = document.createElement("p");
     info.innerHTML = `${points[v].x}`;
     container.appendChild(info);
@@ -316,7 +310,6 @@ function findPositions(points, p, height, calcWidth, left, dpi) {
   // positioningx1 finds the x-pos for the current div.
   // positioningx2 finds the x-pos for the next div.
   let positioningx1 = calculateCenterAlign(calcWidth, left, 5 * dpi, dpi);
-  console.log(left);
   let positioningy1 = posY;
   let leftPosX2 = left + calcWidth;
   let positioningx2;

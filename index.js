@@ -62,14 +62,12 @@ let canvBase = calculateCanvasBase(points);
 // previously set.
 export function reformatPoints(points, canvHeight) {
   let ratio = canvHeight / height / 1.8;
-  console.log("ratio: " + ratio);
   let mockArr = [];
   for (let u = 0; u < points.length; u++) {
     let multip = parseFloat((points[u].y / ratio).toFixed(2));
     let newObj = { x: points[u].x, y: multip };
     mockArr.push(newObj);
   }
-  console.log(mockArr);
   return mockArr;
 }
 

@@ -8,19 +8,24 @@ let modifiedPrevArray;
 
 export function storeArray(initialArray, modifiedArray) {
   indexedArray[0].b = initialArray.length;
-  prevArray = initialArray;
-  modifiedPrevArray = modifiedArray;
+  console.log(indexedArray);
+
+  prevArray = [...initialArray];
+  modifiedPrevArray = [...modifiedArray];
+
+  console.log("prevArray: ");
+  console.log(prevArray);
+  console.log("modifiedPrevArray:");
+  console.log(modifiedPrevArray);
 }
 
 export function zoom(height, width, points, prePoints, graphicalEffects) {
   let container = document.getElementById("container");
   let scalingContainer = document.getElementById("scalingContainer");
 
-  let pointCopy = [...points];
-  pointCopy.shift();
+  let pointCopy = [...prevArray];
 
-  let prePointCopy = [...prePoints];
-  prePointCopy.shift();
+  let prePointCopy = [...modifiedPrevArray];
 
   // Removes any container divs that exist from the previous render
   for (let u = 0; u < points.length; u++) {
@@ -43,26 +48,28 @@ export function zoom(height, width, points, prePoints, graphicalEffects) {
   // Splices the array so that we get only the selected region
   if (indexedAccurate === true) {
     if (indexed[0] > indexed[1]) {
-      prePointCopy.splice(indexed[0] + 1);
+      prePointCopy.splice(indexed[0]);
       prePointCopy.splice(0, indexed[1]);
 
-      pointCopy.splice(indexed[0] + 1);
+      pointCopy.splice(indexed[0]);
       pointCopy.splice(0, indexed[1]);
       let x = indexed[0];
       let y = indexed[1];
       let obj = { a: y, b: x };
       indexedArray.push(obj);
+      console.log("array from zoom: ");
       console.log(indexedArray);
     } else if (indexed[1] > indexed[0]) {
-      prePointCopy.splice(indexed[1] + 1);
+      prePointCopy.splice(indexed[1]);
       prePointCopy.splice(0, indexed[0]);
 
-      pointCopy.splice(indexed[1] + 1);
+      pointCopy.splice(indexed[1]);
       pointCopy.splice(0, indexed[0]);
       let x = indexed[1];
       let y = indexed[0];
       let obj = { a: y, b: x };
       indexedArray.push(obj);
+      console.log("array from zoom: ");
       console.log(indexedArray);
     } else {
       console.log("err");
@@ -74,8 +81,6 @@ export function zoom(height, width, points, prePoints, graphicalEffects) {
   // Runs the height reformatting again so that we can set the zoom to fill the proper amount of screen.
   let cHeight = calculateCanvasHeight(pointCopy);
   let refPoints = reformatPoints(pointCopy, cHeight);
-  console.log("points from zoom function: ");
-  console.log(points);
   renderCanvas(height, width, refPoints, pointCopy, graphicalEffects);
   indexed = [0, 0];
 }
@@ -88,7 +93,6 @@ export function zoomDown(
   dpi,
   graphicalEffects
 ) {
-  console.log(graphicalEffects);
   // Deletes any boundaries present when the mouse is clicked on the graph, thus reducing annoyance for the user.
   let boundaryDiv1 = document.getElementById("boundaryDiv1");
   let boundaryDiv2 = document.getElementById("boundaryDiv2");
@@ -96,7 +100,6 @@ export function zoomDown(
   boundaryDiv2.style.display = "none";
 
   // Sets the first index to the current container div.
-  console.log("mouse down: " + index);
   indexed[0] = index;
   renderZoomDown(index, calcWidth, points, left, dpi, graphicalEffects);
 }
@@ -104,7 +107,6 @@ export function zoomDown(
 function renderZoomDown(index, calcWidth, points, left, dpi, graphicalEffects) {
   // Renders out the boundary div when the mouse is first clicked.
 
-  console.log(graphicalEffects);
   let boundaryDiv1 = document.getElementById("boundaryDiv1");
   let width = calcWidth * index;
 
@@ -121,8 +123,6 @@ function renderZoomDown(index, calcWidth, points, left, dpi, graphicalEffects) {
 
 export function zoomUp(index, calcWidth, points, left, dpi, graphicalEffects) {
   // Sets the second index to the current container div.
-  console.log("zoom up: " + graphicalEffects);
-  console.log("mouse up: " + index);
   indexed[1] = index;
   renderZoomUp(index, calcWidth, points, left, dpi, graphicalEffects);
 }
@@ -172,11 +172,25 @@ function renderZoomUp(index, calcWidth, points, left, dpi, graphicalEffects) {
 
 export function zoomOut(height, width, graphicalEffects) {
   let indexedLength = indexedArray.length;
-  if (indexedLength > 1) {
-    let modArr = modifiedPrevArray;
-    let prevObj = indexedArray[indexedLength - 2];
+  if (indexedLength > 0) {
+    let modArr = [...modifiedPrevArray];
+    let prevArr = [...prevArray];
+    let prevObj;
+    if (indexedLength > 1) {
+      prevObj = indexedArray[indexedLength - 2];
+    } else if (indexedLength === 1) {
+      prevObj = indexedArray[0];
+    }
+    console.log("prev obj: ");
+    console.log(prevObj);
     modArr.splice(0, prevObj.a);
     modArr.splice(prevObj.b);
+    prevArr.splice(0, prevObj.a);
+    prevArr.splice(prevObj.b);
+    indexedArray.splice(indexedLength - 1);
+    console.log(indexedArray);
+    console.log(prevArray);
+    console.log(modifiedPrevArray);
 
     let container = document.getElementById("container");
     let scalingContainer = document.getElementById("scalingContainer");
@@ -191,6 +205,6 @@ export function zoomOut(height, width, graphicalEffects) {
       scalingContainer.remove(info);
     }
 
-    renderCanvas(height, width, modifiedPrevArray, prevArray, graphicalEffects);
+    renderCanvas(height, width, modArr, prevArr, graphicalEffects);
   }
 }
