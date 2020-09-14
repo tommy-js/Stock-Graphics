@@ -7,13 +7,9 @@ let prevArray;
 let modifiedPrevArray;
 
 export function storeArray(initialArray, modifiedArray) {
-  console.log("CALLING STOREARRAY");
   indexedArray[0].b = initialArray.length;
-  console.log("b: " + indexedArray[0].b);
   prevArray = initialArray;
   modifiedPrevArray = modifiedArray;
-  console.log("modifiedPrevArray: ");
-  console.log(modifiedPrevArray);
 }
 
 export function zoom(height, width, points, prePoints, graphicalEffects) {
@@ -176,21 +172,25 @@ function renderZoomUp(index, calcWidth, points, left, dpi, graphicalEffects) {
 
 export function zoomOut(height, width, graphicalEffects) {
   let indexedLength = indexedArray.length;
-  console.log("modifiedPrevArray:");
-  console.log(modifiedPrevArray);
-  let modArr = modifiedPrevArray;
-  console.log("modarr:");
-  console.log(modArr);
-  let prevObj = indexedArray[indexedLength - 2];
-  console.log("prevObj: ");
-  console.log(prevObj);
-  modArr.splice(0, prevObj.a);
-  console.log("modarr:");
-  console.log(modArr);
-  modArr.splice(prevObj.b);
-  console.log("modarr:");
-  console.log(modArr);
-  // console.log("prevObj: ");
-  // console.log(prevObj);
-  renderCanvas(height, width, modifiedPrevArray, prevArray, graphicalEffects);
+  if (indexedLength > 1) {
+    let modArr = modifiedPrevArray;
+    let prevObj = indexedArray[indexedLength - 2];
+    modArr.splice(0, prevObj.a);
+    modArr.splice(prevObj.b);
+
+    let container = document.getElementById("container");
+    let scalingContainer = document.getElementById("scalingContainer");
+
+    // Removes any container divs that exist from the previous render
+    for (let u = 0; u < prevArray.length; u++) {
+      let div = document.getElementById(`divEl${u}`);
+      container.remove(div);
+    }
+    for (let g = 0; g < 3; g++) {
+      let info = document.getElementById(`verticalScale${g}`);
+      scalingContainer.remove(info);
+    }
+
+    renderCanvas(height, width, modifiedPrevArray, prevArray, graphicalEffects);
+  }
 }
