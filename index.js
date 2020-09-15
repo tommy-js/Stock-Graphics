@@ -33,12 +33,9 @@ let points = [
   { x: "07/15", y: 98.99 },
 ];
 
-// Height and width set for the canvas generally. This is
-// what the canvas should always scale down/up to.
-const height = 300;
-const width = 600;
-
 const graphicalEffects = {
+  graphHeight: 300,
+  graphWidth: 600,
   title: "Apple",
   ticker: "AAPL",
   fontSize: 22,
@@ -49,10 +46,17 @@ const graphicalEffects = {
   gainColor: "green",
   lossColor: "red",
   fillColor: "red",
-  dateRangeActive: true,
+  dateRangeActive: false,
   graphFontSize: 16,
   infoDivWidth: 100,
 };
+
+if (graphicalEffects.graphHeight < 300) {
+  graphicalEffects.graphHeight = 300;
+}
+if (graphicalEffects.graphWidth < 600) {
+  graphicalEffects.graphWidth = 600;
+}
 
 export function calculateCanvasHeight(points) {
   // Calculates the maximum y-variable of the canvas.
@@ -84,7 +88,8 @@ let canvBase = calculateCanvasBase(points);
 export function reformatPoints(points, canvHeight, canvBase) {
   let pointsCopy = [];
   let avg = 0;
-  let absoluteMax = height + (1 / 4) * height;
+  let absoluteMax =
+    graphicalEffects.graphHeight + (1 / 4) * graphicalEffects.graphHeight;
   let ratioDistance = absoluteMax * 5;
   for (let g = 0; g < points.length; g++) {
     avg = avg + points[g].y;
@@ -109,4 +114,10 @@ let modifiedPoints = reformatPoints(points, canvHeight, canvBase);
 
 storeArray(points, modifiedPoints);
 
-renderCanvas(height, width, modifiedPoints, points, graphicalEffects);
+renderCanvas(
+  graphicalEffects.graphHeight,
+  graphicalEffects.graphWidth,
+  modifiedPoints,
+  points,
+  graphicalEffects
+);

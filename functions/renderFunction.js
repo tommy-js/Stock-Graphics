@@ -19,16 +19,17 @@ export function renderCanvas(
   // Create the master div for positioning.
   let masterDiv = document.createElement("div");
   masterDiv.setAttribute("id", "masterDiv");
-  masterDiv.style = `width: ${width}px; height: ${height}px; position: absolute; top: 100px; margin-left: auto; margin-right: auto; left: 0; right: 0; border: 1px solid green;`;
+  masterDiv.style = `width: ${
+    width + 100
+  }px; position: absolute; top: 100px; margin-left: auto; margin-right: auto; left: 0; right: 0; border: 1px solid green;`;
   document.body.appendChild(masterDiv);
 
   let scaledWidth = "85%";
-  let scaledHeight = "85%";
 
   // Create a container div to hold all the smaller divs and sit over the graph.
   let container = document.createElement("div");
   container.setAttribute("id", "container");
-  container.style = `width: ${scaledWidth}; height: ${scaledHeight}; position: relative; border: 1px solid blue; margin-left: auto; margin-right: auto; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none;-moz-user-select: none; -ms-user-select: none; user-select: none; outline: none;`;
+  container.style = `width: ${scaledWidth}; height: ${height}px; margin-top: 50px; margin-bottom: 50px; position: relative; border: 1px solid blue; margin-left: auto; margin-right: auto; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none;-moz-user-select: none; -ms-user-select: none; user-select: none; outline: none;`;
 
   // Appends the container div into the main document.
   masterDiv.appendChild(container);
@@ -140,7 +141,7 @@ export function renderCanvas(
   // Creates the information div that tells us what the value of the graph is.
   let infoDiv = document.createElement("div");
   infoDiv.setAttribute("id", "infoDiv");
-  infoDiv.style = `position: absolute; width: ${graphicalEffects.infoDivWidth}px; top: 30px; border: 1px solid grey; background-color: lightgrey; opacity: 0; font-size: ${graphicalEffects.graphFontSize}px; text-align: center; padding: 5px;`;
+  infoDiv.style = `position: absolute; width: ${graphicalEffects.infoDivWidth}px; top: 30px; background-color: lightgrey; opacity: 0; font-size: ${graphicalEffects.graphFontSize}px; text-align: center; padding: 5px; box-sizing: border-box;`;
   container.appendChild(infoDiv);
 
   // Creates a vertical value line to sit on the graph and show you where you're highlighting.
@@ -353,16 +354,14 @@ function findPositions(points, p, height, calcWidth, left, dpi) {
   // Calculates the center of the div.
   // positioningx1 finds the x-pos for the current div.
   // positioningx2 finds the x-pos for the next div.
-  let positioningx1 =
-    calculateCenterAlign(calcWidth, left, 5 * dpi, dpi) / 0.85;
+  let positioningx1 = calculateCenterAlign(calcWidth, left, 5 * dpi, dpi);
   let positioningy1 = posY;
   let leftPosX2 = left + calcWidth;
   let positioningx2;
   let positioningy2;
   if (points[p + 1]) {
     positioningy2 = modifiedHeight - points[p + 1].y;
-    positioningx2 =
-      calculateCenterAlign(calcWidth, leftPosX2, 5 * dpi, dpi) / 0.85;
+    positioningx2 = calculateCenterAlign(calcWidth, leftPosX2, 5 * dpi, dpi);
   } else {
     positioningy2 = posY;
   }
@@ -434,7 +433,7 @@ export function calculateCenterAlign(divWidth, left, radius, dpi) {
 
 // Calculates the width of each component div.
 function calculateWidth(width, xPoints) {
-  let graphWidth = (width / xPoints) * 0.85;
+  let graphWidth = width / xPoints;
   return graphWidth;
 }
 
