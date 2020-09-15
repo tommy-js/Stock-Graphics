@@ -180,7 +180,7 @@ export function renderCanvas(
       div.setAttribute("id", `divEl${p}`);
       let left = calcLeft(p, width, points.length);
       let positions = findPositions(prePoints, p, height, calcWidth, left, dpi);
-      div.style = `position: absolute; width: ${calcWidth}px; height: 100%; left: ${left}px`;
+      div.style = `position: absolute; width: ${calcWidth}px; height: 100%; left: ${left}px; border: 1px solid black;`;
 
       // Calculates the number of pixels we need to move the infoDiv back for it to be centered above the vertical dashed line.
       let calcDivided = graphicalEffects.infoDivWidth / 2;
@@ -196,7 +196,8 @@ export function renderCanvas(
           dpi,
           points[p].x,
           prePoints[p].y,
-          calcDivided
+          calcDivided,
+          calcWidth
         );
       });
       // Function for when we move out of a div, which removes the circle.
@@ -210,7 +211,8 @@ export function renderCanvas(
           dpi,
           points[p].x,
           prePoints[p].y,
-          calcDivided
+          calcDivided,
+          calcWidth
         );
       });
 
@@ -351,14 +353,16 @@ function findPositions(points, p, height, calcWidth, left, dpi) {
   // Calculates the center of the div.
   // positioningx1 finds the x-pos for the current div.
   // positioningx2 finds the x-pos for the next div.
-  let positioningx1 = calculateCenterAlign(calcWidth, left, 5 * dpi, dpi);
+  let positioningx1 =
+    calculateCenterAlign(calcWidth, left, 5 * dpi, dpi) / 0.85;
   let positioningy1 = posY;
   let leftPosX2 = left + calcWidth;
   let positioningx2;
   let positioningy2;
   if (points[p + 1]) {
     positioningy2 = modifiedHeight - points[p + 1].y;
-    positioningx2 = calculateCenterAlign(calcWidth, leftPosX2, 5 * dpi, dpi);
+    positioningx2 =
+      calculateCenterAlign(calcWidth, leftPosX2, 5 * dpi, dpi) / 0.85;
   } else {
     positioningy2 = posY;
   }
@@ -396,17 +400,19 @@ function renderInfoDiv(
   dpi,
   date,
   actualVal,
-  calcDivided
+  calcDivided,
+  calcWidth
 ) {
   let info = document.getElementById("infoDiv");
   let infoLine = document.getElementById("infoDivLine");
+  let medCalcWidth = calcWidth / 2;
   if (mouseIn === true) {
     // Displays the height of the hovered element.
     info.innerHTML = `${date}: $${y}`;
     // Styles the component so that it sits just left of the highest point.
-    info.style.left = `${x - calcDivided}px`;
+    info.style.left = `${x - calcDivided + medCalcWidth}px`;
 
-    infoLine.style.left = `${x}px`;
+    infoLine.style.left = `${x + medCalcWidth}px`;
     // Styles the div so that it is visible.
     info.style.opacity = "1";
     // Styles the div line visible.
@@ -423,7 +429,7 @@ function renderInfoDiv(
 // Calculates the center of the div.
 export function calculateCenterAlign(divWidth, left, radius, dpi) {
   let calculatedPos = left * dpi + (divWidth / 2) * dpi - radius / 2;
-  return calculatedPos / 0.85;
+  return calculatedPos;
 }
 
 // Calculates the width of each component div.
