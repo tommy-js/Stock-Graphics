@@ -36,7 +36,7 @@ export function renderCanvas(
   // Define the canvas.
   let canv = document.createElement("canvas");
   canv.setAttribute("id", "canvasID");
-  canv.style = `border: 1px solid black; width: 85%; height: 85%;
+  canv.style = `border: 1px solid black; width: 100%; height: 100%; box-sizing: border-box;
   position: absolute;`;
 
   // Attach the canvas to the body.
@@ -56,7 +56,7 @@ export function renderCanvas(
 
   // Create a container to hold all the vertical values
   let scaleContainer = document.createElement("div");
-  scaleContainer.style = `position: absolute;height: ${height}px; width: 20px;`;
+  scaleContainer.style = `position: absolute; height: ${height}px; width: 20px;`;
   scaleContainer.setAttribute("id", "scalingContainer");
   container.appendChild(scaleContainer);
 
@@ -161,7 +161,6 @@ export function renderCanvas(
   renderHorizontalValues(calcWidth, prePoints);
 
   function renderDivs(width, points, prePoints, height, dpi, graphicalEffects) {
-    width = width * 0.85;
     let container = document.getElementById("container");
     let calcWidth = calculateWidth(width, points.length);
     for (let p = 0; p < points.length; p++) {
@@ -176,7 +175,7 @@ export function renderCanvas(
       div.setAttribute("id", `divEl${p}`);
       let left = calcLeft(p, width, points.length);
       let positions = findPositions(prePoints, p, height, calcWidth, left, dpi);
-      div.style = `position: absolute; width: ${calcWidth}px; height: 85%; border: 1px solid black; left: ${left}px`;
+      div.style = `position: absolute; width: ${calcWidth}px; height: 100%; border: 1px solid black; left: ${left}px`;
       // Function for when we mouse over a div, which makes a circle appear. showing current stock value
       div.addEventListener("mouseover", function () {
         renderInfoDiv(
@@ -352,6 +351,9 @@ function findPositions(points, p, height, calcWidth, left, dpi) {
   } else {
     positioningy2 = posY;
   }
+  console.log(
+    `x1: ${positioningx1}, x2: ${positioningx2}, y1: ${positioningy1}, y2: ${positioningy2}, posy: ${posY}`
+  );
   return {
     positioningx1,
     positioningy1,
@@ -396,9 +398,8 @@ function renderInfoDiv(mouseIn, x, y, width, height, dpi, date, actualVal) {
 
 // Calculates the center of the div.
 export function calculateCenterAlign(divWidth, left, radius, dpi) {
-  let calculatedPos =
-    left * dpi + Math.floor(divWidth / 2) * dpi - Math.floor(radius / 2);
-  return calculatedPos;
+  let calculatedPos = left * dpi + (divWidth / 2) * dpi - radius / 2;
+  return calculatedPos / 0.85;
 }
 
 // Calculates the width of each component div.

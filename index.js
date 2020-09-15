@@ -83,7 +83,7 @@ export function reformatPoints(points, canvHeight, canvBase) {
   let pointsCopy = [];
   let avg = 0;
   let absoluteMax = height + (1 / 4) * height;
-  let ratioDistance = absoluteMax * 10;
+  let ratioDistance = absoluteMax * 5;
   for (let g = 0; g < points.length; g++) {
     avg = avg + points[g].y;
     console.log("avg: " + avg);
