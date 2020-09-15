@@ -140,9 +140,14 @@ export function renderCanvas(
   // Creates the information div that tells us what the value of the graph is.
   let infoDiv = document.createElement("div");
   infoDiv.setAttribute("id", "infoDiv");
-  infoDiv.style =
-    "position: absolute; height: 25px; border: 1px solid grey; background-color: lightgrey; opacity: 0; transition: 0.3s;";
+  infoDiv.style = `position: absolute; width: ${graphicalEffects.infoDivWidth}px; top: 30px; border: 1px solid grey; background-color: lightgrey; opacity: 0; font-size: ${graphicalEffects.graphFontSize}px; text-align: center; padding: 5px;`;
   container.appendChild(infoDiv);
+
+  // Creates a vertical value line to sit on the graph and show you where you're highlighting.
+  let infoDivLine = document.createElement("div");
+  infoDivLine.setAttribute("id", "infoDivLine");
+  infoDivLine.style = `position: absolute; height: 100%; width: 1px; border-right: 1px dashed orange;`;
+  container.appendChild(infoDivLine);
 
   // Creates the two boundary divs that appear when you drag the mouse.
   let boundaryDiv1 = document.createElement("div");
@@ -175,7 +180,11 @@ export function renderCanvas(
       div.setAttribute("id", `divEl${p}`);
       let left = calcLeft(p, width, points.length);
       let positions = findPositions(prePoints, p, height, calcWidth, left, dpi);
-      div.style = `position: absolute; width: ${calcWidth}px; height: 100%; border: 1px solid black; left: ${left}px`;
+      div.style = `position: absolute; width: ${calcWidth}px; height: 100%; left: ${left}px`;
+
+      // Calculates the number of pixels we need to move the infoDiv back for it to be centered above the vertical dashed line.
+      let calcDivided = graphicalEffects.infoDivWidth / 2;
+
       // Function for when we mouse over a div, which makes a circle appear. showing current stock value
       div.addEventListener("mouseover", function () {
         renderInfoDiv(
@@ -186,7 +195,8 @@ export function renderCanvas(
           height,
           dpi,
           points[p].x,
-          prePoints[p].y
+          prePoints[p].y,
+          calcDivided
         );
       });
       // Function for when we move out of a div, which removes the circle.
@@ -199,7 +209,8 @@ export function renderCanvas(
           height,
           dpi,
           points[p].x,
-          prePoints[p].y
+          prePoints[p].y,
+          calcDivided
         );
       });
 
@@ -376,22 +387,35 @@ function renderLine(startX, startY, endX, endY, lineColor, lineWidth) {
 }
 
 // Function renders a circle to show us the current value of stock.
-function renderInfoDiv(mouseIn, x, y, width, height, dpi, date, actualVal) {
+function renderInfoDiv(
+  mouseIn,
+  x,
+  y,
+  width,
+  height,
+  dpi,
+  date,
+  actualVal,
+  calcDivided
+) {
   let info = document.getElementById("infoDiv");
+  let infoLine = document.getElementById("infoDivLine");
   if (mouseIn === true) {
     // Displays the height of the hovered element.
     info.innerHTML = `${date}: $${y}`;
-    // Calculates the height necessary to display the number right above the highest point.
-    let modifiedHeight = actualVal / dpi;
-    // Styles the component so that it sits just above the highest point.
-    info.style.bottom = `${modifiedHeight}px`;
     // Styles the component so that it sits just left of the highest point.
-    info.style.left = `${x}px`;
+    info.style.left = `${x - calcDivided}px`;
+
+    infoLine.style.left = `${x}px`;
     // Styles the div so that it is visible.
     info.style.opacity = "1";
+    // Styles the div line visible.
+    infoLine.style.opacity = "1";
   } else {
     // Renders the component invisible.
     info.style.opacity = "0";
+    // Renders the div line invisible.
+    infoLine.style.opacity = "0";
     info.innerHTML = ``;
   }
 }
