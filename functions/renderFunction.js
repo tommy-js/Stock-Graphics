@@ -1,4 +1,5 @@
 import { zoomDown, zoomUp, zoom, zoomOut } from "./zoom.js";
+import { calculateCanvasBase, calculateCanvasHeight } from "../index.js";
 // The render function renders the initial graph, starting with either one month
 // of data or the maximum data there is available, whichever is smaller.
 
@@ -350,7 +351,7 @@ function calcLeft(p, width, pointsLength) {
 function findPositions(points, p, height, calcWidth, left, dpi) {
   // vertically to actually appear correct.
   let modifiedHeight = height * dpi;
-  let posY = modifiedHeight - points[p].y;
+  let posY = modifiedHeight - points[p].y * dpi;
   // Calculates the center of the div.
   // positioningx1 finds the x-pos for the current div.
   // positioningx2 finds the x-pos for the next div.
@@ -360,7 +361,7 @@ function findPositions(points, p, height, calcWidth, left, dpi) {
   let positioningx2;
   let positioningy2;
   if (points[p + 1]) {
-    positioningy2 = modifiedHeight - points[p + 1].y;
+    positioningy2 = modifiedHeight - points[p + 1].y * dpi;
     positioningx2 = calculateCenterAlign(calcWidth, leftPosX2, 5 * dpi, dpi);
   } else {
     positioningy2 = posY;
@@ -379,6 +380,7 @@ function findPositions(points, p, height, calcWidth, left, dpi) {
 
 // Renders a line, which connect into a graph-pattern.
 function renderLine(startX, startY, endX, endY, lineColor, lineWidth) {
+  // Renders from to - equivalent to css styling top: endY.
   let canvas = document.getElementById("canvasID");
   let ctx = canvas.getContext("2d");
   ctx.strokeStyle = lineColor;
@@ -427,7 +429,7 @@ function renderInfoDiv(
 
 // Calculates the center of the div.
 export function calculateCenterAlign(divWidth, left, radius, dpi) {
-  let calculatedPos = left * dpi + (divWidth / 2) * dpi - radius / 2;
+  let calculatedPos = left * dpi + (divWidth / 2) * dpi + (radius / 2) * dpi;
   return calculatedPos;
 }
 

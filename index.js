@@ -13,7 +13,7 @@ let points = [
   { x: "07/08", y: 94.18 },
   { x: "07/09", y: 96.26 },
   { x: "07/10", y: 95.33 },
-  { x: "07/13", y: 97.26 },
+  { x: "07/13", y: 90.26 },
   { x: "07/14", y: 94.84 },
   { x: "07/15", y: 98.99 },
   { x: "07/16", y: 96.56 },
@@ -26,7 +26,7 @@ let points = [
   { x: "07/14", y: 94.84 },
   { x: "07/15", y: 98.99 },
   { x: "07/16", y: 96.56 },
-  { x: "07/09", y: 96.26 },
+  { x: "07/09", y: 12.26 },
   { x: "07/17", y: 96.99 },
   { x: "07/20", y: 96.42 },
   { x: "07/14", y: 94.84 },
@@ -86,22 +86,32 @@ let canvBase = calculateCanvasBase(points);
 // Formats the points we have so that they actually fill the graph screen.
 
 export function reformatPoints(points, canvHeight, canvBase) {
+  let range = canvHeight - canvBase;
+  console.log("range: " + range);
+  let height = graphicalEffects.graphHeight;
+  let scaledHeight = height * 0.75;
+  let scale = scaledHeight / range;
+
+  let distance = canvBase * scale;
+  console.log("distance: " + distance);
+
   let pointsCopy = [];
-  let avg = 0;
-  let absoluteMax =
-    graphicalEffects.graphHeight + (1 / 4) * graphicalEffects.graphHeight;
-  let ratioDistance = absoluteMax * 5;
-  for (let g = 0; g < points.length; g++) {
-    avg = avg + points[g].y;
-    console.log("avg: " + avg);
-  }
-  let finalizedAvg = avg / points.length;
-  console.log("finalizedAvg: " + finalizedAvg);
-  let scaleFactor = ratioDistance / finalizedAvg;
-  console.log("scaleFactor: " + scaleFactor);
+  // let avg = 0;
+  // let absoluteMax =
+  //   graphicalEffects.graphHeight + (1 / 4) * graphicalEffects.graphHeight;
+  // let ratioDistance = absoluteMax * 5;
+  // for (let g = 0; g < points.length; g++) {
+  //   avg = avg + points[g].y;
+  //   console.log("avg: " + avg);
+  // }
+  // let finalizedAvg = avg / points.length;
+  // console.log("finalizedAvg: " + finalizedAvg);
+  // let scaleFactor = ratioDistance / finalizedAvg;
+  // console.log("scaleFactor: " + scaleFactor);
   for (let t = 0; t < points.length; t++) {
-    let distance = points[t].y - finalizedAvg;
-    let mult = distance * scaleFactor + finalizedAvg + canvBase;
+    // let distance = points[t].y - finalizedAvg;
+    // let mult = distance * scaleFactor + finalizedAvg + canvBase;
+    let mult = points[t].y * scale - distance;
     let newObj = { x: points[t].x, y: mult };
     pointsCopy.push(newObj);
   }
