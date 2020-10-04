@@ -35,32 +35,34 @@ export function renderCanvas(
   // Appends the container div into the main document.
   masterDiv.appendChild(container);
 
-  // Define the canvas.
-  let canv = document.createElement("canvas");
-  canv.setAttribute("id", "canvasID");
-  canv.style = `border: 1px solid black; width: 100%; height: 100%; box-sizing: border-box;
-  position: absolute;`;
-
-  // Attach the canvas to the body.
-  container.appendChild(canv);
+  // Create a container to hold all the vertical values
+  let scaleContainer = document.createElement("div");
+  scaleContainer.style = `position: absolute; height: ${height}px; width: ${width}px; left: -40px;`;
+  scaleContainer.setAttribute("id", "scalingContainer");
+  container.appendChild(scaleContainer);
 
   // Handle resizing so that the canvas will not be blury and will be
   // within necessary aspect ratio.
   let dpi = window.devicePixelRatio;
+  renderVerticalValues(height, width, points, prePoints, dpi);
+
+  // Define the canvas.
+  let canv = document.createElement("canvas");
+  canv.setAttribute("id", "canvasID");
+  canv.style = `border: 1px solid black; width: 100%; height: 100%; box-sizing: border-box;
+    position: absolute;`;
+
+  // Attach the canvas to the body.
+  container.appendChild(canv);
+
   let canvas = document.getElementById("canvasID");
   let ctx = canvas.getContext("2d");
   canvas.setAttribute("height", height * dpi);
   canvas.setAttribute("width", width * dpi);
-  ctx.fillStyle = `${graphicalEffects.backgroundColor}`;
+  ctx.fillStyle = `transparent`;
   ctx.fillRect(0, 0, width * dpi, height * dpi);
   // Calculate the width so that we can define the div widths.
   let calcWidth = calculateWidth(width, points.length);
-
-  // Create a container to hold all the vertical values
-  let scaleContainer = document.createElement("div");
-  scaleContainer.style = `position: absolute; height: ${height}px; width: 20px;`;
-  scaleContainer.setAttribute("id", "scalingContainer");
-  container.appendChild(scaleContainer);
 
   let textBar = document.createElement("div");
   textBar.setAttribute("id", "canvasTextBar");
@@ -164,7 +166,6 @@ export function renderCanvas(
 
   // Function renders all the divs you can highlight over.
   renderDivs(width, points, prePoints, height, dpi, graphicalEffects);
-  renderVerticalValues(height, points, prePoints);
   renderHorizontalValues(calcWidth, prePoints);
 
   function renderDivs(width, points, prePoints, height, dpi, graphicalEffects) {
@@ -281,33 +282,37 @@ function verticalValueHeight(canvasHeight, height, v) {
 
 // Get the maximum value on the graph. Then, start from v=0, set the first value since v=0 the height=0 also. Then, multiply successive values of v until v=3.
 
-function renderVerticalValues(height, points, prePoints) {
+function renderVerticalValues(height, width, points, prePoints, dpi) {
   let max = maxPoints(points);
   let min = minPoints(points);
-  let sub = max - min;
-  let scaling = sub / 3;
-  let scaledPoints = maxPoints(prePoints);
-  let scaledMinPoints = minPoints(prePoints);
-  let scaledTotal = scaledPoints - scaledMinPoints;
-  let actualScaling = scaledTotal / 3;
+  let range = max - min;
+  let vertValNum = 6;
+  let avgBreak = range / 4;
+  let maxDisplay = avgBreak * 5;
+
+  let visualDistance = height / 5;
+
   let container = document.getElementById("container");
   let scalingContainer = document.getElementById("scalingContainer");
 
-  for (let v = 0; v < 4; v++) {
-    let info = document.createElement("p");
-    info.setAttribute("id", `verticalScale${v}`);
+  for (let i = 0; i < vertValNum; i++) {
+    let info = document.createElement("div");
+    let infoTag = document.createElement("div");
+    info.setAttribute("id", `verticalScale${i}`);
+    infoTag.setAttribute("id", `verticalScaleDiv${i}`);
 
-    let displayedVal = (v * scaling + min).toFixed(2);
-    let actualHeight;
-    if (v > 0) {
-      actualHeight = (actualScaling * v + scaledMinPoints) / 1.8;
-    } else if (v === 0) {
-      actualHeight = scaledMinPoints / 1.8 + 20;
-    }
+    let scaled = i * avgBreak + min;
+    let floorScaled = Math.floor(scaled * 100) / 100;
 
-    info.innerHTML = `${displayedVal}`;
-    info.style = `bottom: ${actualHeight}px; left: 0; position: absolute; height: 0; margin: 0; border-bottom: 1px solid red;`;
+    let vis = i * visualDistance;
+
+    info.innerHTML = `${floorScaled}`;
+    info.style = `position: absolute; bottom: ${
+      vis - 10
+    }px; z-index: 99; height: 20px; background-color: white; border`;
+    infoTag.style = `bottom: ${vis}px; width: ${width}px; left: 0; position: absolute; height: 25px; margin: 0; border-bottom: 1px solid #E0E0E0;`;
     scalingContainer.appendChild(info);
+    scalingContainer.appendChild(infoTag);
   }
 }
 
@@ -366,9 +371,9 @@ function findPositions(points, p, height, calcWidth, left, dpi) {
   } else {
     positioningy2 = posY;
   }
-  console.log(
-    `x1: ${positioningx1}, x2: ${positioningx2}, y1: ${positioningy1}, y2: ${positioningy2}, posy: ${posY}`
-  );
+  // console.log(
+  //   `x1: ${positioningx1}, x2: ${positioningx2}, y1: ${positioningy1}, y2: ${positioningy2}, posy: ${posY}`
+  // );
   return {
     positioningx1,
     positioningy1,

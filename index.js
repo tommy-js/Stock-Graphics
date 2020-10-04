@@ -6,31 +6,16 @@ import { renderCanvas } from "./functions/renderFunction.js";
 import { storeArray } from "./functions/zoom.js";
 
 let points = [
-  { x: "07/01", y: 91.28 },
-  { x: "07/02", y: 91.96 },
-  { x: "07/06", y: 92.5 },
-  { x: "07/07", y: 93.85 },
-  { x: "07/08", y: 94.18 },
-  { x: "07/09", y: 96.26 },
-  { x: "07/10", y: 95.33 },
-  { x: "07/13", y: 90.26 },
-  { x: "07/14", y: 94.84 },
-  { x: "07/15", y: 98.99 },
-  { x: "07/16", y: 96.56 },
-  { x: "07/09", y: 96.26 },
-  { x: "07/17", y: 96.99 },
-  { x: "07/20", y: 96.42 },
-  { x: "07/14", y: 94.84 },
-  { x: "07/15", y: 98.99 },
-  { x: "07/16", y: 96.56 },
-  { x: "07/14", y: 94.84 },
-  { x: "07/15", y: 98.99 },
-  { x: "07/16", y: 96.56 },
-  { x: "07/09", y: 12.26 },
-  { x: "07/17", y: 96.99 },
-  { x: "07/20", y: 96.42 },
-  { x: "07/14", y: 94.84 },
-  { x: "07/15", y: 98.99 },
+  { x: "07/01", y: 2 },
+  { x: "07/02", y: 2 },
+  { x: "07/06", y: 2 },
+  { x: "07/07", y: 2 },
+  { x: "07/02", y: 2 },
+  { x: "07/06", y: 1 },
+  { x: "07/07", y: 3 },
+  { x: "07/02", y: 4 },
+  { x: "07/06", y: 2 },
+  { x: "07/07", y: 3 },
 ];
 
 const graphicalEffects = {
@@ -39,7 +24,7 @@ const graphicalEffects = {
   title: "Apple",
   ticker: "AAPL",
   fontSize: 22,
-  backgroundColor: "grey",
+  backgroundColor: "white",
   lineColor: "red",
   lineWidth: 5,
   boundaryWidth: 3,
@@ -96,21 +81,7 @@ export function reformatPoints(points, canvHeight, canvBase) {
   console.log("distance: " + distance);
 
   let pointsCopy = [];
-  // let avg = 0;
-  // let absoluteMax =
-  //   graphicalEffects.graphHeight + (1 / 4) * graphicalEffects.graphHeight;
-  // let ratioDistance = absoluteMax * 5;
-  // for (let g = 0; g < points.length; g++) {
-  //   avg = avg + points[g].y;
-  //   console.log("avg: " + avg);
-  // }
-  // let finalizedAvg = avg / points.length;
-  // console.log("finalizedAvg: " + finalizedAvg);
-  // let scaleFactor = ratioDistance / finalizedAvg;
-  // console.log("scaleFactor: " + scaleFactor);
   for (let t = 0; t < points.length; t++) {
-    // let distance = points[t].y - finalizedAvg;
-    // let mult = distance * scaleFactor + finalizedAvg + canvBase;
     let mult = points[t].y * scale - distance;
     let newObj = { x: points[t].x, y: mult };
     pointsCopy.push(newObj);
