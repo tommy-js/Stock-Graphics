@@ -52,6 +52,7 @@ import { renderFull } from "./index.js";
 //   buttonFontSize: 8,
 //   buttonColor: "blue",
 //   buttonBorder: "1px solid red",
+//   contentsDiv: "main",
 // };
 
 renderFull(points, graphicalEffects);

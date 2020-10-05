@@ -16,13 +16,16 @@ export function renderCanvas(
   points,
   graphicalEffects
 ) {
+  // Get the container div in which to center the master div.
+  let contents = document.getElementById(graphicalEffects.contentsDiv);
+
   // Create the master div for positioning.
   let masterDiv = document.createElement("div");
   masterDiv.setAttribute("id", "masterDiv");
   masterDiv.style = `width: ${
     width + 100
   }px; position: absolute; top: 100px; margin-left: auto; margin-right: auto; left: 0; right: 0;`;
-  document.body.appendChild(masterDiv);
+  contents.appendChild(masterDiv);
 
   let scaledWidth = "85%";
 
