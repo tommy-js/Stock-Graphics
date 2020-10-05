@@ -1,6 +1,6 @@
 {
   "name": "stock-graphics",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A small library for rendering stock charts",
   "main": "index.js",
   "repository": {
