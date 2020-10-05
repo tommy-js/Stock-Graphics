@@ -1,11 +1,19 @@
 {
-  "name": "graphics",
+  "name": "stock-graphics",
   "version": "1.0.0",
   "description": "A small library for rendering stock charts",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tommy-js/Stock-Graphics.git"
+  },
   "scripts": {
     "test": "Graphics Start"
   },
   "author": "Tommy Benjamin",
-  "license": "MIT"
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tommy-js/Stock-Graphics/issues"
+  },
+  "homepage": "https://github.com/tommy-js/Stock-Graphics#readme"
 }

@@ -1,5 +1,4 @@
 import { zoomDown, zoomUp, zoom, zoomOut } from "./zoom.js";
-import { calculateCanvasBase, calculateCanvasHeight } from "../index.js";
 // The render function renders the initial graph, starting with either one month
 // of data or the maximum data there is available, whichever is smaller.
 
@@ -22,7 +21,7 @@ export function renderCanvas(
   masterDiv.setAttribute("id", "masterDiv");
   masterDiv.style = `width: ${
     width + 100
-  }px; position: absolute; top: 100px; margin-left: auto; margin-right: auto; left: 0; right: 0; border: 1px solid green;`;
+  }px; position: absolute; top: 100px; margin-left: auto; margin-right: auto; left: 0; right: 0;`;
   document.body.appendChild(masterDiv);
 
   let scaledWidth = "85%";
@@ -30,7 +29,7 @@ export function renderCanvas(
   // Create a container div to hold all the smaller divs and sit over the graph.
   let container = document.createElement("div");
   container.setAttribute("id", "container");
-  container.style = `width: ${scaledWidth}; height: ${height}px; margin-top: 50px; margin-bottom: 50px; position: relative; border: 1px solid blue; margin-left: auto; margin-right: auto; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none;-moz-user-select: none; -ms-user-select: none; user-select: none; outline: none;`;
+  container.style = `width: ${scaledWidth}; height: ${height}px; margin-top: 50px; margin-bottom: 50px; position: relative;  margin-left: auto; margin-right: auto; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none;-moz-user-select: none; -ms-user-select: none; user-select: none; outline: none;`;
 
   // Appends the container div into the main document.
   masterDiv.appendChild(container);
@@ -66,29 +65,25 @@ export function renderCanvas(
 
   let textBar = document.createElement("div");
   textBar.setAttribute("id", "canvasTextBar");
-  textBar.style = `width: 200px; position: absolute; top: -50px; margin-left: auto; margin-right: auto; border: 1px solid red; left: 0; right: 0; height: 50px;`;
+  textBar.style = `width: 200px; position: absolute; top: -50px; margin-left: auto; margin-right: auto; left: 0; right: 0; height: 50px;`;
   container.appendChild(textBar);
 
   let displayMode = "block";
 
+  let text;
+
   if (graphicalEffects.ticker) {
     displayMode = "inline-block";
+    text = `${graphicalEffects.title} #${graphicalEffects.ticker}`;
+  } else {
+    text = graphicalEffects.title;
   }
 
-  let title = document.createElement("p");
+  let title = document.createElement("div");
   title.setAttribute("id", "canvasTitle");
-  title.style = `font-size: ${graphicalEffects.fontSize}px; position: relative; display: ${displayMode}; text-align: center; margin-right: 5px;`;
-  title.innerHTML = `${graphicalEffects.title}`;
+  title.style = `font-size: ${graphicalEffects.fontSize}px; box-sizing: border-box; padding: 10px; display: ${displayMode}; width: 100%; text-align: center;`;
+  title.innerHTML = `${text}`;
   textBar.appendChild(title);
-
-  if (graphicalEffects.ticker) {
-    displayMode = "inline-block";
-    let ticker = document.createElement("p");
-    ticker.setAttribute("id", "canvasTicker");
-    ticker.innerHTML = `#${graphicalEffects.ticker}`;
-    ticker.style = `font-size: ${graphicalEffects.fontSize}px; position: relative; display: inline-block; margin-right: 5px;`;
-    textBar.appendChild(ticker);
-  }
 
   let periodMarker = document.createElement("div");
   periodMarker.setAttribute("id", "canvasPeriodMarker");
@@ -100,7 +95,7 @@ export function renderCanvas(
     opac = 0;
   }
 
-  periodMarker.style = `width: 200px; left: 0; bottom: -50px; height: 50px; position: absolute; border: 1px solid red; transition: 0.3s; z-index: 99999`;
+  periodMarker.style = `width: 200px; left: 0; bottom: -50px; height: 50px; position: absolute; transition: 0.3s; z-index: 99999`;
   periodMarker.style.opacity = opac;
   let index1 = points[0].x;
   let index2 = points[points.length - 1].x;
@@ -183,7 +178,7 @@ export function renderCanvas(
       div.setAttribute("id", `divEl${p}`);
       let left = calcLeft(p, width, points.length);
       let positions = findPositions(prePoints, p, height, calcWidth, left, dpi);
-      div.style = `position: absolute; width: ${calcWidth}px; height: 100%; left: ${left}px; border: 1px solid black;`;
+      div.style = `position: absolute; width: ${calcWidth}px; height: 100%; left: ${left}px;`;
 
       // Calculates the number of pixels we need to move the infoDiv back for it to be centered above the vertical dashed line.
       let calcDivided = graphicalEffects.infoDivWidth / 2;
@@ -230,16 +225,34 @@ export function renderCanvas(
       });
       // Appends each div to the container div.
       container.appendChild(div);
+
+      let calculatedLineColor = calculateLineColor(
+        points,
+        graphicalEffects.lossColor,
+        graphicalEffects.gainColor
+      );
+
       // Renders the line running from current one to the next.
       renderLine(
         positions.positioningx1,
         positions.positioningy1,
         positions.positioningx2,
         positions.positioningy2,
-        graphicalEffects.lineColor,
+        calculatedLineColor,
         graphicalEffects.lineWidth
       );
     }
+  }
+}
+
+// Returns the line color of the graph depending on gain/loss
+function calculateLineColor(points, loss, gain) {
+  let firstVal = points[0].y;
+  let finalVal = points[points.length - 1].y;
+  if (finalVal >= firstVal) {
+    return gain;
+  } else if (finalVal < firstVal) {
+    return loss;
   }
 }
 
@@ -307,10 +320,10 @@ function renderVerticalValues(height, width, points, prePoints, dpi) {
     let vis = i * visualDistance;
 
     info.innerHTML = `${floorScaled}`;
-    info.style = `position: absolute; bottom: ${
+    info.style = `position: absolute; padding-right: 2px; bottom: ${
       vis - 10
-    }px; z-index: 99; height: 20px; background-color: white; border`;
-    infoTag.style = `bottom: ${vis}px; width: ${width}px; left: 0; position: absolute; height: 25px; margin: 0; border-bottom: 1px solid #E0E0E0;`;
+    }px; z-index: 99; height: 20px; background-color: white; border; font-size: 14px;`;
+    infoTag.style = `bottom: ${vis}px; width: ${width}px; left: 0; position: absolute; height: 25px; margin: 0; border-bottom: 1px solid #E8E8E8;`;
     scalingContainer.appendChild(info);
     scalingContainer.appendChild(infoTag);
   }
