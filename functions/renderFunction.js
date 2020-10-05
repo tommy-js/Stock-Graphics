@@ -119,7 +119,7 @@ export function renderCanvas(
   // Creates a button that we can click to zoom in on the graph.
   let zoomButton = document.createElement("button");
   zoomButton.setAttribute("id", "zoom_button");
-  zoomButton.style = `width: 50px; height: 40px; position: absolute; top: -50px; left: 0; z-index: 9999;`;
+  zoomButton.style = `width: ${graphicalEffects.buttonSize.width}px; font-size: ${graphicalEffects.buttonFontSize}px; height: ${graphicalEffects.buttonSize.height}px; position: absolute; top: -${graphicalEffects.buttonSize.height}px; left: 0; z-index: 9999;`;
   zoomButton.innerHTML = "zoom";
   zoomButton.addEventListener("click", function () {
     zoom(height, width, points, prePoints, graphicalEffects);
@@ -129,7 +129,7 @@ export function renderCanvas(
   // Creates a buttom that we can click to zoom back out to where we were before.
   let zoomOutButton = document.createElement("button");
   zoomOutButton.setAttribute("id", "zoom_out_button");
-  zoomOutButton.style = `width: 50px; height: 40px; position: absolute; top: -50px; left: 50px; z-index: 9999;`;
+  zoomOutButton.style = `width: ${graphicalEffects.buttonSize.width}px; font-size: ${graphicalEffects.buttonFontSize}px; height: ${graphicalEffects.buttonSize.height}px; position: absolute; top: -${graphicalEffects.buttonSize.height}px; left: 50px; z-index: 9999;`;
   zoomOutButton.innerHTML = "zoom out";
   zoomOutButton.addEventListener("click", function () {
     zoomOut(height, width, graphicalEffects);

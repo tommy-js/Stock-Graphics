@@ -96,10 +96,9 @@ export function calculateCanvasBase(points) {
   return calculatedMinHeight;
 }
 
-export function reformatPoints(points, canvHeight, canvBase) {
+export function reformatPoints(points, canvHeight, canvBase, height) {
   let range = canvHeight - canvBase;
   console.log("range: " + range);
-  let height = graphicalEffects.graphHeight;
   let scaledHeight = height * 0.75;
   let scale = scaledHeight / range;
 

@@ -85,7 +85,12 @@ export function zoom(height, width, points, prePoints, graphicalEffects) {
   // Runs the height reformatting again so that we can set the zoom to fill the proper amount of screen.
   let cHeight = calculateCanvasHeight(pointCopy);
   let cBase = calculateCanvasBase(pointCopy);
-  let refPoints = reformatPoints(pointCopy, cHeight, cBase);
+  let refPoints = reformatPoints(
+    pointCopy,
+    cHeight,
+    cBase,
+    graphicalEffects.graphHeight
+  );
   renderCanvas(height, width, refPoints, pointCopy, graphicalEffects);
   indexed = [0, 0];
 }
