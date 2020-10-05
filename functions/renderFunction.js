@@ -43,7 +43,7 @@ export function renderCanvas(
   // Handle resizing so that the canvas will not be blury and will be
   // within necessary aspect ratio.
   let dpi = window.devicePixelRatio;
-  renderVerticalValues(height, width, points, prePoints, dpi);
+  renderVerticalValues(height, width, points, prePoints, dpi, graphicalEffects);
 
   // Define the canvas.
   let canv = document.createElement("canvas");
@@ -161,7 +161,7 @@ export function renderCanvas(
 
   // Function renders all the divs you can highlight over.
   renderDivs(width, points, prePoints, height, dpi, graphicalEffects);
-  renderHorizontalValues(calcWidth, prePoints);
+  renderHorizontalValues(calcWidth, prePoints, graphicalEffects);
 
   function renderDivs(width, points, prePoints, height, dpi, graphicalEffects) {
     let container = document.getElementById("container");
@@ -295,7 +295,14 @@ function verticalValueHeight(canvasHeight, height, v) {
 
 // Get the maximum value on the graph. Then, start from v=0, set the first value since v=0 the height=0 also. Then, multiply successive values of v until v=3.
 
-function renderVerticalValues(height, width, points, prePoints, dpi) {
+function renderVerticalValues(
+  height,
+  width,
+  points,
+  prePoints,
+  dpi,
+  graphicalEffects
+) {
   let max = maxPoints(points);
   let min = minPoints(points);
   let range = max - min;
@@ -322,15 +329,19 @@ function renderVerticalValues(height, width, points, prePoints, dpi) {
     info.innerHTML = `${floorScaled}`;
     info.style = `position: absolute; padding-right: 2px; bottom: ${
       vis - 10
-    }px; z-index: 99; height: 20px; background-color: white; border; font-size: 14px;`;
-    infoTag.style = `bottom: ${vis}px; width: ${width}px; left: 0; position: absolute; height: 25px; margin: 0; border-bottom: 1px solid #E8E8E8;`;
+    }px; z-index: 99; height: 20px; background-color: white; font-size: ${
+      graphicalEffects.graphFontSize
+    }px;`;
+    infoTag.style = `bottom: ${vis}px; width: ${
+      0.925 * (graphicalEffects.graphWidth + 100)
+    }px; position: absolute; height: 25px; margin: 0; border-bottom: 1px solid #E8E8E8;`;
     scalingContainer.appendChild(info);
     scalingContainer.appendChild(infoTag);
   }
 }
 
 // Renders out the horizontal values on the graph.
-function renderHorizontalValues(calcWidth, points) {
+function renderHorizontalValues(calcWidth, points, graphicalEffects) {
   let scaling = declutterHorizontal(points);
   let max = points.length - 1;
   let container = document.getElementById("container");
@@ -339,7 +350,7 @@ function renderHorizontalValues(calcWidth, points) {
     let info = document.createElement("p");
     info.innerHTML = `${points[v].x}`;
     container.appendChild(info);
-    info.style = `bottom: 0; left: ${width}px; position: absolute;`;
+    info.style = `bottom: 0; left: ${width}px; position: absolute;  font-size: ${graphicalEffects.graphFontSize}px;`;
   }
 }
 

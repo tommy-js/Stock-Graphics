@@ -34,11 +34,11 @@ export let points = [
 ];
 
 export const graphicalEffects = {
-  graphHeight: 300,
-  graphWidth: 600,
+  graphHeight: 200,
+  graphWidth: 400,
   title: "Apple",
   ticker: "AAPL",
-  fontSize: 22,
+  fontSize: 14,
   backgroundColor: "white",
   lineWidth: 5,
   boundaryWidth: 3,
@@ -46,7 +46,7 @@ export const graphicalEffects = {
   lossColor: "red",
   fillColor: "red",
   dateRangeActive: false,
-  graphFontSize: 16,
+  graphFontSize: 12,
   infoDivWidth: 100,
 };
 

@@ -6,11 +6,11 @@ import { renderCanvas } from "./functions/renderFunction.js";
 import { storeArray } from "./functions/zoom.js";
 
 export function renderFull(points, graphicalEffects) {
-  if (graphicalEffects.graphHeight < 300) {
-    graphicalEffects.graphHeight = 300;
+  if (graphicalEffects.graphHeight < 100) {
+    graphicalEffects.graphHeight = 100;
   }
-  if (graphicalEffects.graphWidth < 600) {
-    graphicalEffects.graphWidth = 600;
+  if (graphicalEffects.graphWidth < 200) {
+    graphicalEffects.graphWidth = 200;
   }
 
   function calculateCanvasHeight(points) {
