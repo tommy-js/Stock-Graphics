@@ -22,9 +22,9 @@ export function renderCanvas(
   // Create the master div for positioning.
   let masterDiv = document.createElement("div");
   masterDiv.setAttribute("id", "masterDiv");
-  masterDiv.style = `width: ${
-    width + 100
-  }px; position: absolute; top: 100px; margin-left: auto; margin-right: auto; left: 0; right: 0;`;
+  masterDiv.style = `width: ${width + 100}px; position: absolute; left: ${
+    graphicalEffects.graphLeft
+  }px; right: ${graphicalEffects.graphRight};`;
   contents.appendChild(masterDiv);
 
   let scaledWidth = "85%";

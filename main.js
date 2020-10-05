@@ -36,6 +36,8 @@ import { renderFull } from "./index.js";
 // export const graphicalEffects = {
 //   graphHeight: 300,
 //   graphWidth: 600,
+//   graphLeft: 0,
+//   graphRight: 0,
 //   title: "Apple",
 //   ticker: "AAPL",
 //   fontSize: 14,
