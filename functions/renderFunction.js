@@ -24,7 +24,9 @@ export function renderCanvas(
   masterDiv.setAttribute("id", "masterDiv");
   masterDiv.style = `width: ${width + 100}px; position: absolute; left: ${
     graphicalEffects.graphLeft
-  }px; right: ${graphicalEffects.graphRight};`;
+  }px; right: ${graphicalEffects.graphRight}; margin-left: ${
+    graphicalEffects.positioning
+  }; margin-right:  ${graphicalEffects.positioning};`;
   contents.appendChild(masterDiv);
 
   let scaledWidth = "85%";
@@ -122,7 +124,7 @@ export function renderCanvas(
   // Creates a button that we can click to zoom in on the graph.
   let zoomButton = document.createElement("button");
   zoomButton.setAttribute("id", "zoom_button");
-  zoomButton.style = `width: ${graphicalEffects.buttonSize.width}px; background-color: ${graphicalEffects.buttonColor}; border: ${graphicalEffects.buttonBorder}; font-size: ${graphicalEffects.buttonFontSize}px; height: ${graphicalEffects.buttonSize.height}px; position: absolute; top: -${graphicalEffects.buttonSize.height}px; left: 0; z-index: 9999;`;
+  zoomButton.style = `width: ${graphicalEffects.buttonSize.width}px; color: ${graphicalEffects.buttonFontColor}; background-color: ${graphicalEffects.buttonColor}; border: ${graphicalEffects.buttonBorder}; font-size: ${graphicalEffects.buttonFontSize}px; height: ${graphicalEffects.buttonSize.height}px; position: absolute; top: -${graphicalEffects.buttonSize.height}px; left: 0; z-index: 9999;`;
   zoomButton.innerHTML = "zoom";
   zoomButton.addEventListener("click", function () {
     zoom(height, width, points, prePoints, graphicalEffects);
@@ -132,7 +134,7 @@ export function renderCanvas(
   // Creates a buttom that we can click to zoom back out to where we were before.
   let zoomOutButton = document.createElement("button");
   zoomOutButton.setAttribute("id", "zoom_out_button");
-  zoomOutButton.style = `width: ${graphicalEffects.buttonSize.width}px; background-color: ${graphicalEffects.buttonColor}; border: ${graphicalEffects.buttonBorder}; font-size: ${graphicalEffects.buttonFontSize}px; height: ${graphicalEffects.buttonSize.height}px; position: absolute; top: -${graphicalEffects.buttonSize.height}px; left: 50px; z-index: 9999;`;
+  zoomOutButton.style = `width: ${graphicalEffects.buttonSize.width}px; color: ${graphicalEffects.buttonFontColor}; background-color: ${graphicalEffects.buttonColor}; border: ${graphicalEffects.buttonBorder}; font-size: ${graphicalEffects.buttonFontSize}px; height: ${graphicalEffects.buttonSize.height}px; position: absolute; top: -${graphicalEffects.buttonSize.height}px; left: 50px; z-index: 9999;`;
   zoomOutButton.innerHTML = "zoom out";
   zoomOutButton.addEventListener("click", function () {
     zoomOut(height, width, graphicalEffects);
