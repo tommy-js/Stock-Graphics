@@ -15,7 +15,7 @@ export function renderFull(points, graphicalEffects) {
   let maxWidth = positionContents.width;
 
   if (typeOfHeight === "string") {
-    graphicalEffects.graphHeight = maxHeight;
+    graphicalEffects.graphHeight = maxHeight - 75;
   } else if (typeOfHeight === "number") {
     if (graphicalEffects.graphHeight < 100) {
       graphicalEffects.graphHeight = 100;
@@ -23,7 +23,7 @@ export function renderFull(points, graphicalEffects) {
   }
 
   if (typeOfWidth === "string") {
-    graphicalEffects.graphWidth = maxWidth;
+    graphicalEffects.graphWidth = maxWidth - 100;
   } else if (typeOfWidth === "number") {
     if (graphicalEffects.graphWidth < 200) {
       graphicalEffects.graphWidth = 200;
