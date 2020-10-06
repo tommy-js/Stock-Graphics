@@ -35,26 +35,9 @@ In order to set points, write in the form
 And to change the way the graph looks, modify anything in the graphicalEffects object. The object is of the form:
 
 ```
-  const graphicalEffects = {
-  graphHeight: 300 , //Total height of the graph
-  graphWidth: 600,  //Total width of the graph
-  title: "Apple",   //Name of the stock you wish to render
-  ticker: "AAPL",   //Ticker of the stock you wish to render
-  fontSize: 22,   //Font size of the title and ticker
-  backgroundColor: "white", //Color of the background of the graph. Currently not working
-  lineWidth: 5,   //Width in pixels of the graph's lines
-  boundaryWidth: 3, //Don't worry about this right now
-  gainColor: "green", //Color the graph takes on when there is overall positive growth
-  lossColor: "red",   //Color the graph takes on when tehre is overall negative growth
-  fillColor: "red",   //Does not do anything. Will be removed.
-  dateRangeActive: false,  //Controls whether or not the small date-range indicator at the bottom of the graph is permanently visible.
-  graphFontSize: 16,  //Controls the text size of the leftmost vertical values.
-  infoDivWidth: 100,  //The width of the small container that tells you the value when you hover over a part of the graph.
-};
-
-export const graphicalEffects = {
-  graphHeight: 300, //Total height of the graph
-  graphWidth: 600,  //Total width of the graph
+const graphicalEffects = {
+  graphHeight: 300, //Total height of the graph [set to "100" to set the graph height to the total height of the container div]
+  graphWidth: 600,  //Total width of the graph [set to "100" to set the graph width to the total width of the container div]
   graphLeft: 0,  //Pixels to move to the left
   graphRight: 0,  //Pixels to move to the right
   positioning: "auto",  //Sets the margin-left and margin-right properties
