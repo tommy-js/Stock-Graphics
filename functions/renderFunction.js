@@ -104,7 +104,7 @@ export function renderCanvas(
     opac = 0;
   }
 
-  periodMarker.style = `width: 200px; left: 0; bottom: -50px; height: 50px; position: absolute; transition: 0.3s; z-index: 99999`;
+  periodMarker.style = `width: 200px; left: 0; bottom: -50px; height: 50px; position: absolute; transition: 0.3s; z-index: 9`;
   periodMarker.style.opacity = opac;
   let index1 = points[0].x;
   let index2 = points[points.length - 1].x;
@@ -128,7 +128,7 @@ export function renderCanvas(
   // Creates a button that we can click to zoom in on the graph.
   let zoomButton = document.createElement("button");
   zoomButton.setAttribute("class", "zoom_button");
-  zoomButton.style = `width: ${graphicalEffects.buttonSize.width}px; color: ${graphicalEffects.buttonFontColor}; background-color: ${graphicalEffects.buttonColor}; border: ${graphicalEffects.buttonBorder}; font-size: ${graphicalEffects.buttonFontSize}px; height: ${graphicalEffects.buttonSize.height}px; position: absolute; top: -${graphicalEffects.buttonSize.height}px; left: 0; z-index: 9999;`;
+  zoomButton.style = `width: ${graphicalEffects.buttonSize.width}px; color: ${graphicalEffects.buttonFontColor}; background-color: ${graphicalEffects.buttonColor}; border: ${graphicalEffects.buttonBorder}; font-size: ${graphicalEffects.buttonFontSize}px; height: ${graphicalEffects.buttonSize.height}px; position: absolute; top: -${graphicalEffects.buttonSize.height}px; left: 0; z-index: 9;`;
   zoomButton.innerHTML = "zoom";
   zoomButton.addEventListener("click", function () {
     zoom(height, width, points, prePoints, graphicalEffects);
@@ -138,7 +138,7 @@ export function renderCanvas(
   // Creates a buttom that we can click to zoom back out to where we were before.
   let zoomOutButton = document.createElement("button");
   zoomOutButton.setAttribute("class", "zoom_out_button");
-  zoomOutButton.style = `width: ${graphicalEffects.buttonSize.width}px; color: ${graphicalEffects.buttonFontColor}; background-color: ${graphicalEffects.buttonColor}; border: ${graphicalEffects.buttonBorder}; font-size: ${graphicalEffects.buttonFontSize}px; height: ${graphicalEffects.buttonSize.height}px; position: absolute; top: -${graphicalEffects.buttonSize.height}px; left: 50px; z-index: 9999;`;
+  zoomOutButton.style = `width: ${graphicalEffects.buttonSize.width}px; color: ${graphicalEffects.buttonFontColor}; background-color: ${graphicalEffects.buttonColor}; border: ${graphicalEffects.buttonBorder}; font-size: ${graphicalEffects.buttonFontSize}px; height: ${graphicalEffects.buttonSize.height}px; position: absolute; top: -${graphicalEffects.buttonSize.height}px; left: 50px; z-index: 9;`;
   zoomOutButton.innerHTML = "zoom out";
   zoomOutButton.addEventListener("click", function () {
     zoomOut(height, width, graphicalEffects);
@@ -148,7 +148,7 @@ export function renderCanvas(
   // Creates the information div that tells us what the value of the graph is.
   let infoDiv = document.createElement("div");
   infoDiv.setAttribute("class", "infoDiv");
-  infoDiv.style = `position: absolute; width: ${graphicalEffects.infoDivWidth}px; top: 30px; background-color: lightgrey; opacity: 0; font-size: ${graphicalEffects.graphFontSize}px; text-align: center; padding: 5px; box-sizing: border-box;`;
+  infoDiv.style = `position: absolute; width: ${graphicalEffects.infoDivWidth}px; top: 30px; background-color: lightgrey; opacity: 0; font-size: ${graphicalEffects.graphFontSize}px; text-align: center; padding: 5px; box-sizing: border-box; z-index: 9`;
   container.appendChild(infoDiv);
 
   // Creates a vertical value line to sit on the graph and show you where you're highlighting.
@@ -343,7 +343,7 @@ function renderVerticalValues(
     info.innerHTML = `${floorScaled}`;
     info.style = `position: absolute; padding-right: 2px; bottom: ${
       vis - 10
-    }px; z-index: 99; height: 20px; background-color: white; font-size: ${
+    }px; z-index: 9; height: 20px; background-color: white; font-size: ${
       graphicalEffects.graphFontSize
     }px;`;
     infoTag.style = `bottom: ${vis}px; width: ${
