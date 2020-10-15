@@ -63,7 +63,7 @@ export function renderCanvas(
   // Attach the canvas to the body.
   container.appendChild(canv);
 
-  let canvas = document.getElementsByClassName("canvasID");
+  let canvas = contents.getElementsByClassName("canvasID");
   let ctx = canvas[0].getContext("2d");
   canvas[0].setAttribute("height", height * dpi);
   canvas[0].setAttribute("width", width * dpi);
@@ -173,7 +173,7 @@ export function renderCanvas(
   renderHorizontalValues(calcWidth, prePoints, graphicalEffects);
 
   function renderDivs(width, points, prePoints, height, dpi, graphicalEffects) {
-    let container = document.getElementsByClassName("container");
+    let container = contents.getElementsByClassName("container");
     let calcWidth = calculateWidth(width, points.length);
     for (let p = 0; p < points.length; p++) {
       // Calculate height of the maximum point on each div. This is because the
@@ -204,7 +204,8 @@ export function renderCanvas(
           points[p].x,
           prePoints[p].y,
           calcDivided,
-          calcWidth
+          calcWidth,
+          graphicalEffects.contentsDiv
         );
       });
       // Function for when we move out of a div, which removes the circle.
@@ -219,7 +220,8 @@ export function renderCanvas(
           points[p].x,
           prePoints[p].y,
           calcDivided,
-          calcWidth
+          calcWidth,
+          graphicalEffects.contentsDiv
         );
       });
 
@@ -248,7 +250,8 @@ export function renderCanvas(
         positions.positioningx2,
         positions.positioningy2,
         calculatedLineColor,
-        graphicalEffects.lineWidth
+        graphicalEffects.lineWidth,
+        graphicalEffects.contentsDiv
       );
     }
   }
@@ -321,8 +324,10 @@ function renderVerticalValues(
 
   let visualDistance = height / 5;
 
-  let container = document.getElementsByClassName("container");
-  let scalingContainer = document.getElementsByClassName("scalingContainer");
+  let contents = document.getElementById(graphicalEffects.contentsDiv);
+
+  let container = contents.getElementsByClassName("container");
+  let scalingContainer = contents.getElementsByClassName("scalingContainer");
 
   for (let i = 0; i < vertValNum; i++) {
     let info = document.createElement("div");
@@ -351,9 +356,10 @@ function renderVerticalValues(
 
 // Renders out the horizontal values on the graph.
 function renderHorizontalValues(calcWidth, points, graphicalEffects) {
+  let contents = document.getElementById(graphicalEffects.contentsDiv);
   let scaling = declutterHorizontal(points);
   let max = points.length - 1;
-  let container = document.getElementsByClassName("container");
+  let container = contents.getElementsByClassName("container");
   for (let v = 0; v < max; v += scaling) {
     let width = v * calcWidth + calcWidth / 2;
     let info = document.createElement("p");
@@ -417,9 +423,18 @@ function findPositions(points, p, height, calcWidth, left, dpi) {
 }
 
 // Renders a line, which connect into a graph-pattern.
-function renderLine(startX, startY, endX, endY, lineColor, lineWidth) {
+function renderLine(
+  startX,
+  startY,
+  endX,
+  endY,
+  lineColor,
+  lineWidth,
+  contentsDiv
+) {
+  let contents = document.getElementById(contentsDiv);
   // Renders from to - equivalent to css styling top: endY.
-  let canvas = document.getElementsByClassName("canvasID");
+  let canvas = contents.getElementsByClassName("canvasID");
   let ctx = canvas[0].getContext("2d");
   ctx.strokeStyle = lineColor;
   ctx.lineWidth = lineWidth;
@@ -440,10 +455,12 @@ function renderInfoDiv(
   date,
   actualVal,
   calcDivided,
-  calcWidth
+  calcWidth,
+  contentsDiv
 ) {
-  let info = document.getElementsByClassName("infoDiv");
-  let infoLine = document.getElementsByClassName("infoDivLine");
+  let contents = document.getElementById(contentsDiv);
+  let info = contents.getElementsByClassName("infoDiv");
+  let infoLine = contents.getElementsByClassName("infoDivLine");
   let medCalcWidth = calcWidth / 2;
   if (mouseIn === true) {
     // Displays the height of the hovered element.
