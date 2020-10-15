@@ -19,8 +19,10 @@ export function storeArray(initialArray, modifiedArray) {
 }
 
 export function zoom(height, width, points, prePoints, graphicalEffects) {
-  let container = document.getElementsByClassName("container");
-  let scalingContainer = document.getElementsByClassName("scalingContainer");
+  let contents = document.getElementById(graphicalEffects.contentsDiv);
+
+  let container = contents.getElementsByClassName("container");
+  let scalingContainer = contents.getElementsByClassName("scalingContainer");
 
   let pointCopy = [...prevArray];
 
@@ -88,9 +90,10 @@ export function zoomDown(
   dpi,
   graphicalEffects
 ) {
+  let contents = document.getElementById(graphicalEffects.contentsDiv);
   // Deletes any boundaries present when the mouse is clicked on the graph, thus reducing annoyance for the user.
-  let boundaryDiv1 = document.getElementsByClassName("boundaryDiv1");
-  let boundaryDiv2 = document.getElementsByClassName("boundaryDiv2");
+  let boundaryDiv1 = contents.getElementsByClassName("boundaryDiv1");
+  let boundaryDiv2 = contents.getElementsByClassName("boundaryDiv2");
   boundaryDiv1[0].style.display = "none";
   boundaryDiv2[0].style.display = "none";
 
@@ -101,8 +104,9 @@ export function zoomDown(
 
 function renderZoomDown(index, calcWidth, points, left, dpi, graphicalEffects) {
   // Renders out the boundary div when the mouse is first clicked.
+  let contents = document.getElementById(graphicalEffects.contentsDiv);
 
-  let boundaryDiv1 = document.getElementsByClassName("boundaryDiv1");
+  let boundaryDiv1 = contents.getElementsByClassName("boundaryDiv1");
   let width = calcWidth * index;
 
   // Calculates the center value of the container div so that the boundary will appear at the highest value.
@@ -124,9 +128,10 @@ export function zoomUp(index, calcWidth, points, left, dpi, graphicalEffects) {
 
 function renderZoomUp(index, calcWidth, points, left, dpi, graphicalEffects) {
   // Renders out the boundary div when the mouse is released.
+  let contents = document.getElementById(graphicalEffects.contentsDiv);
 
   if (indexed[0] != indexed[1]) {
-    let boundaryDiv2 = document.getElementsByClassName("boundaryDiv2");
+    let boundaryDiv2 = contents.getElementsByClassName("boundaryDiv2");
     let width = calcWidth * index;
 
     // Calculates the center value of the container div so that the boundary will appear at the highest value.
@@ -150,7 +155,7 @@ function renderZoomUp(index, calcWidth, points, left, dpi, graphicalEffects) {
       sub = points[ind2].y - points[ind1].y;
     }
 
-    let boundaryDiv1 = document.getElementsByClassName("boundaryDiv1");
+    let boundaryDiv1 = contents.getElementsByClassName("boundaryDiv1");
     if (sub < 0) {
       boundaryDiv1[0].style.backgroundColor = `${graphicalEffects.lossColor}`;
       boundaryDiv2[0].style.backgroundColor = `${graphicalEffects.lossColor}`;
@@ -160,7 +165,7 @@ function renderZoomUp(index, calcWidth, points, left, dpi, graphicalEffects) {
     }
   } else {
     // Handles the situation when the user clicks on the same div twice.
-    let boundaryDiv1 = document.getElementsByClassName("boundaryDiv1");
+    let boundaryDiv1 = contents.getElementsByClassName("boundaryDiv1");
     boundaryDiv1[0].style.display = "none";
   }
 }
@@ -187,8 +192,10 @@ export function zoomOut(height, width, graphicalEffects) {
     console.log(prevArray);
     console.log(modifiedPrevArray);
 
-    let container = document.getElementsByClassName("container");
-    let scalingContainer = document.getElementsByClassName("scalingContainer");
+    let contents = document.getElementById(graphicalEffects.contentsDiv);
+
+    let container = contents.getElementsByClassName("container");
+    let scalingContainer = contents.getElementsByClassName("scalingContainer");
 
     renderCanvas(height, width, modArr, prevArr, graphicalEffects);
   }
