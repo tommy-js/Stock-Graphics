@@ -399,16 +399,17 @@ function findPositions(points, p, height, left, dpi) {
   // positioningx1 finds the x-pos for the current div.
   // positioningx2 finds the x-pos for the next div.
   let calcWidth = calculateWidth(points.length);
-  let positioningx1 = calculateCenterAlign(calcWidth, left, 5, dpi);
+  let positioningx1 = calculateCenterAlign(points.length, left, 5, dpi);
   let positioningy1 = posY;
   let leftPosX2 = left + calcWidth;
   let positioningx2;
   let positioningy2;
   if (points[p + 1]) {
     positioningy2 = modifiedHeight - points[p + 1].y * dpi;
-    positioningx2 = calculateCenterAlign(calcWidth, leftPosX2, 5, dpi);
+    positioningx2 = calculateCenterAlign(points.length, leftPosX2, 5, dpi);
   } else {
     positioningy2 = posY;
+    positioningx2 = positioningx1 + calcWidth;
   }
   return {
     positioningx1,
@@ -436,8 +437,8 @@ function renderLine(
   ctx.strokeStyle = lineColor;
   ctx.lineWidth = lineWidth;
   ctx.beginPath();
-  ctx.moveTo(startX + 2, startY);
-  ctx.lineTo(endX + 4, endY);
+  ctx.moveTo(startX, startY);
+  ctx.lineTo(endX, endY);
   ctx.stroke();
 }
 
@@ -486,8 +487,12 @@ function renderInfoDiv(
 }
 
 // Calculates the center of the div.
-export function calculateCenterAlign(divWidth, left, radius, dpi) {
-  let calculatedPos = (left + divWidth / 2 + radius) * dpi;
+export function calculateCenterAlign(len, left, radius, dpi) {
+  let containerWidth = document.getElementsByClassName("container");
+  let w = containerWidth[0].getBoundingClientRect();
+  console.log("width of container: " + w.width);
+  let width = w.width / len;
+  let calculatedPos = (left + width / 2 + radius * 2) * dpi;
   return calculatedPos;
 }
 
