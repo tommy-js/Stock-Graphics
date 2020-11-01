@@ -70,7 +70,8 @@ export function renderCanvas(
   ctx.fillStyle = `transparent`;
   ctx.fillRect(0, 0, width * dpi, height * dpi);
   // Calculate the width so that we can define the div widths.
-  let calcWidth = calculateWidth(width, points.length);
+  let scaled = width * 0.85;
+  let calcWidth = calculateWidth(points.length);
 
   let textBar = document.createElement("div");
   textBar.setAttribute("class", "canvasTextBar");
@@ -128,7 +129,7 @@ export function renderCanvas(
   // Creates a button that we can click to zoom in on the graph.
   let zoomButton = document.createElement("button");
   zoomButton.setAttribute("class", "zoom_button");
-  zoomButton.style = `width: ${graphicalEffects.buttonSize.width}px; color: ${graphicalEffects.buttonFontColor}; background-color: ${graphicalEffects.buttonColor}; border: ${graphicalEffects.buttonBorder}; font-size: ${graphicalEffects.buttonFontSize}px; height: ${graphicalEffects.buttonSize.height}px; position: absolute; top: -${graphicalEffects.buttonSize.height}px; left: 0; z-index: 9;`;
+  zoomButton.style = `width: ${graphicalEffects.buttonSize.width}px; color: ${graphicalEffects.buttonFontColor}; background-color: ${graphicalEffects.buttonColor}; border: ${graphicalEffects.buttonBorder}; font-size: ${graphicalEffects.buttonFontSize}px; height: ${graphicalEffects.buttonSize.height}px; position: absolute; top: -${graphicalEffects.buttonSize.height}px; left: 0; z-index: 9; opacity: 0; transition: 0.3s;`;
   zoomButton.innerHTML = "zoom";
   zoomButton.addEventListener("click", function () {
     zoom(height, width, points, prePoints, graphicalEffects);
@@ -138,12 +139,26 @@ export function renderCanvas(
   // Creates a buttom that we can click to zoom back out to where we were before.
   let zoomOutButton = document.createElement("button");
   zoomOutButton.setAttribute("class", "zoom_out_button");
-  zoomOutButton.style = `width: ${graphicalEffects.buttonSize.width}px; color: ${graphicalEffects.buttonFontColor}; background-color: ${graphicalEffects.buttonColor}; border: ${graphicalEffects.buttonBorder}; font-size: ${graphicalEffects.buttonFontSize}px; height: ${graphicalEffects.buttonSize.height}px; position: absolute; top: -${graphicalEffects.buttonSize.height}px; left: 50px; z-index: 9;`;
+  zoomOutButton.style = `width: ${graphicalEffects.buttonSize.width}px; color: ${graphicalEffects.buttonFontColor}; background-color: ${graphicalEffects.buttonColor}; border: ${graphicalEffects.buttonBorder}; font-size: ${graphicalEffects.buttonFontSize}px; height: ${graphicalEffects.buttonSize.height}px; position: absolute; top: -${graphicalEffects.buttonSize.height}px; left: 50px; z-index: 9; opacity: 0; transition: 0.3s;`;
   zoomOutButton.innerHTML = "zoom out";
   zoomOutButton.addEventListener("click", function () {
     zoomOut(height, width, graphicalEffects);
   });
   container.appendChild(zoomOutButton);
+
+  masterDiv.addEventListener("mouseover", function () {
+    zoomButton.style.opacity = 1;
+    zoomOutButton.style.opacity = 1;
+  });
+  masterDiv.addEventListener("mouseout", function () {
+    if (graphicalEffects.dateRangeActive === false) {
+      zoomButton.style.opacity = 0;
+      zoomOutButton.style.opacity = 0;
+    } else {
+      zoomButton.style.opacity = 1;
+      zoomOutButton.style.opacity = 1;
+    }
+  });
 
   // Creates the information div that tells us what the value of the graph is.
   let infoDiv = document.createElement("div");
@@ -174,20 +189,26 @@ export function renderCanvas(
 
   function renderDivs(width, points, prePoints, height, dpi, graphicalEffects) {
     let container = contents.getElementsByClassName("container");
-    let calcWidth = calculateWidth(width, points.length);
+    let scaled = width * 0.85;
+    let calcWidth = calculateWidth(points.length);
     for (let p = 0; p < points.length; p++) {
       // Calculate height of the maximum point on each div. This is because the
       // canvas measures from top to bottom, meaning out graph needs to be flipped.
 
       // Calculates the height of the highest point of the graph within this div.
-      let compHeight = points[p].y;
+      let compHeight;
+      if (points[p]) {
+        compHeight = points[p].y;
+      } else {
+        compHeight = points[p - 1].y;
+      }
       // Create divs that we can mouse-over to see information.
       let div = document.createElement("div");
       // Calculate distance to move each div to the right so that they don't. overlap
       div.setAttribute("class", `divEl${p}`);
-      let left = calcLeft(p, width, points.length);
-      let positions = findPositions(prePoints, p, height, calcWidth, left, dpi);
-      div.style = `position: absolute; width: ${calcWidth}px; height: 100%; left: ${left}px; `;
+      let left = calcLeft(p, calcWidth);
+      let positions = findPositions(prePoints, p, height, left, dpi);
+      div.style = `position: absolute; width: ${calcWidth}px; height: 100%; left: ${left}px; border: 1px solid black;`;
 
       // Calculates the number of pixels we need to move the infoDiv back for it to be centered above the vertical dashed line.
       let calcDivided = graphicalEffects.infoDivWidth / 2;
@@ -197,13 +218,10 @@ export function renderCanvas(
         renderInfoDiv(
           true,
           left,
-          points[p].y,
-          points[p - 1].y,
-          calcWidth,
+          points,
+          p,
           height,
           dpi,
-          points[p].x,
-          prePoints[p].y,
           calcDivided,
           calcWidth,
           graphicalEffects.contentsDiv
@@ -214,13 +232,10 @@ export function renderCanvas(
         renderInfoDiv(
           false,
           left,
-          points[p].y,
-          points[p - 1].y,
-          calcWidth,
+          points,
+          p,
           height,
           dpi,
-          points[p].x,
-          prePoints[p].y,
           calcDivided,
           calcWidth,
           graphicalEffects.contentsDiv
@@ -371,33 +386,30 @@ function renderHorizontalValues(calcWidth, points, graphicalEffects) {
 }
 
 // Calculated the distance right each div should move so that they all sit next to one another.
-function calcLeft(p, width, pointsLength) {
-  let calcWidth = calculateWidth(width, pointsLength);
+function calcLeft(p, calcWidth) {
   let calcLeft = p * calcWidth;
   return calcLeft;
 }
 
-function findPositions(points, p, height, calcWidth, left, dpi) {
+function findPositions(points, p, height, left, dpi) {
   // vertically to actually appear correct.
   let modifiedHeight = height * dpi;
   let posY = modifiedHeight - points[p].y * dpi;
   // Calculates the center of the div.
   // positioningx1 finds the x-pos for the current div.
   // positioningx2 finds the x-pos for the next div.
-  let positioningx1 = calculateCenterAlign(calcWidth, left, 5 * dpi, dpi);
+  let calcWidth = calculateWidth(points.length);
+  let positioningx1 = calculateCenterAlign(calcWidth, left, 5, dpi);
   let positioningy1 = posY;
   let leftPosX2 = left + calcWidth;
   let positioningx2;
   let positioningy2;
   if (points[p + 1]) {
     positioningy2 = modifiedHeight - points[p + 1].y * dpi;
-    positioningx2 = calculateCenterAlign(calcWidth, leftPosX2, 5 * dpi, dpi);
+    positioningx2 = calculateCenterAlign(calcWidth, leftPosX2, 5, dpi);
   } else {
     positioningy2 = posY;
   }
-  // console.log(
-  //   `x1: ${positioningx1}, x2: ${positioningx2}, y1: ${positioningy1}, y2: ${positioningy2}, posy: ${posY}`
-  // );
   return {
     positioningx1,
     positioningy1,
@@ -424,22 +436,20 @@ function renderLine(
   ctx.strokeStyle = lineColor;
   ctx.lineWidth = lineWidth;
   ctx.beginPath();
-  ctx.moveTo(startX, startY);
-  ctx.lineTo(endX, endY);
+  ctx.moveTo(startX + 2, startY);
+  ctx.lineTo(endX + 4, endY);
   ctx.stroke();
 }
 
 // Function renders a circle to show us the current value of stock.
+// WORK
 function renderInfoDiv(
   mouseIn,
   x,
-  y,
-  yPrev,
-  width,
+  p,
+  currentVal,
   height,
   dpi,
-  date,
-  actualVal,
   calcDivided,
   calcWidth,
   contentsDiv
@@ -448,11 +458,16 @@ function renderInfoDiv(
   let info = contents.getElementsByClassName("infoDiv");
   let infoLine = contents.getElementsByClassName("infoDivLine");
   let medCalcWidth = calcWidth / 2;
-  let avgVal = (y + yPrev) / 2;
+  let avgVal;
+  if (p[currentVal - 1]) {
+    avgVal = (p[currentVal].y + p[currentVal - 1].y) / 2;
+  } else {
+    avgVal = p[currentVal].y;
+  }
   let roundedAvgVal = Math.round(avgVal * 100) / 100;
   if (mouseIn === true) {
     // Displays the height of the hovered element.
-    info[0].innerHTML = `${date}: ${roundedAvgVal}`;
+    info[0].innerHTML = `${p[currentVal].x}: ${roundedAvgVal}`;
     // Styles the component so that it sits just left of the highest point.
     info[0].style.left = `${x - calcDivided + medCalcWidth}px`;
 
@@ -472,13 +487,16 @@ function renderInfoDiv(
 
 // Calculates the center of the div.
 export function calculateCenterAlign(divWidth, left, radius, dpi) {
-  let calculatedPos = left * dpi + (divWidth / 2) * dpi + (radius / 2) * dpi;
+  let calculatedPos = (left + divWidth / 2 + radius) * dpi;
   return calculatedPos;
 }
 
 // Calculates the width of each component div.
-function calculateWidth(width, xPoints) {
-  let graphWidth = width / xPoints;
+function calculateWidth(xPoints) {
+  let containerWidth = document.getElementsByClassName("container");
+  let w = containerWidth[0].getBoundingClientRect();
+  console.log("width of container: " + w.width);
+  let graphWidth = w.width / xPoints;
   return graphWidth;
 }
 
