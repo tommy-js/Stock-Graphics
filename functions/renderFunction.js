@@ -58,7 +58,7 @@ export function renderCanvas(
   let canv = document.createElement("canvas");
   canv.setAttribute("class", "canvasID");
   canv.style = `border: 1px solid black; width: 100%; height: 100%; box-sizing: border-box;
-    position: absolute;`;
+    position: absolute; padding-bottom: 40px;`;
 
   // Attach the canvas to the body.
   container.appendChild(canv);
@@ -187,7 +187,7 @@ export function renderCanvas(
       div.setAttribute("class", `divEl${p}`);
       let left = calcLeft(p, width, points.length);
       let positions = findPositions(prePoints, p, height, calcWidth, left, dpi);
-      div.style = `position: absolute; width: ${calcWidth}px; height: 100%; left: ${left}px;`;
+      div.style = `position: absolute; width: ${calcWidth}px; height: 100%; left: ${left}px; `;
 
       // Calculates the number of pixels we need to move the infoDiv back for it to be centered above the vertical dashed line.
       let calcDivided = graphicalEffects.infoDivWidth / 2;
@@ -198,6 +198,7 @@ export function renderCanvas(
           true,
           left,
           points[p].y,
+          points[p - 1].y,
           calcWidth,
           height,
           dpi,
@@ -214,6 +215,7 @@ export function renderCanvas(
           false,
           left,
           points[p].y,
+          points[p - 1].y,
           calcWidth,
           height,
           dpi,
@@ -357,32 +359,15 @@ function renderVerticalValues(
 // Renders out the horizontal values on the graph.
 function renderHorizontalValues(calcWidth, points, graphicalEffects) {
   let contents = document.getElementById(graphicalEffects.contentsDiv);
-  let scaling = declutterHorizontal(points);
   let max = points.length - 1;
   let container = contents.getElementsByClassName("container");
-  for (let v = 0; v < max; v += scaling) {
+  for (let v = 0; v < max; v += graphicalEffects.decluttering) {
     let width = v * calcWidth + calcWidth / 2;
     let info = document.createElement("p");
     info.innerHTML = `${points[v].x}`;
     container[0].appendChild(info);
     info.style = `bottom: 0; left: ${width}px; position: absolute;  font-size: ${graphicalEffects.graphFontSize}px;`;
   }
-}
-
-// Prevents the graph from becoming too cluttered.
-function declutterHorizontal(points) {
-  let horizontalDistance = points.length;
-  let scaling;
-  if (horizontalDistance >= 1 && horizontalDistance < 10) {
-    scaling = 3;
-  } else if (horizontalDistance >= 10 && horizontalDistance < 100) {
-    scaling = 5;
-  } else if (horizontalDistance >= 100 && horizontalDistance < 1000) {
-    scaling = 200;
-  } else {
-    scaling = 2000;
-  }
-  return scaling;
 }
 
 // Calculated the distance right each div should move so that they all sit next to one another.
@@ -449,6 +434,7 @@ function renderInfoDiv(
   mouseIn,
   x,
   y,
+  yPrev,
   width,
   height,
   dpi,
@@ -462,9 +448,11 @@ function renderInfoDiv(
   let info = contents.getElementsByClassName("infoDiv");
   let infoLine = contents.getElementsByClassName("infoDivLine");
   let medCalcWidth = calcWidth / 2;
+  let avgVal = (y + yPrev) / 2;
+  let roundedAvgVal = Math.round(avgVal * 100) / 100;
   if (mouseIn === true) {
     // Displays the height of the hovered element.
-    info[0].innerHTML = `${date}: $${y}`;
+    info[0].innerHTML = `${date}: ${roundedAvgVal}`;
     // Styles the component so that it sits just left of the highest point.
     info[0].style.left = `${x - calcDivided + medCalcWidth}px`;
 
