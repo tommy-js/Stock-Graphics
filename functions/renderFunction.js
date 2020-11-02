@@ -354,15 +354,16 @@ function renderVerticalValues(
 
     let scaled = i * avgBreak + min;
     let floorScaled = Math.floor(scaled * 100) / 100;
+    info.innerHTML = `${floorScaled}`;
 
     let vis = i * visualDistance;
 
-    info.innerHTML = `${floorScaled}`;
-    info.style = `position: absolute; padding-right: 2px; bottom: ${
+    // Gets width of the info container.
+    info.style = `position: absolute; bottom: ${
       vis - 10
-    }px; z-index: 9; height: 20px; background-color: transparent; font-size: ${
+    }px; z-index: 9; height: 20px; left: -15px; background-color: transparent; font-size: ${
       graphicalEffects.graphFontSize
-    }px;`;
+    }px; box-sizing: border-box;`;
     infoTag.style = `bottom: ${vis}px; width: ${
       0.925 * (graphicalEffects.graphWidth + 100)
     }px; position: absolute; height: 25px; margin: 0; border-bottom: 1px solid #E8E8E8;`;
