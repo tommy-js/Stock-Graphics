@@ -208,7 +208,7 @@ export function renderCanvas(
       div.setAttribute("class", `divEl${p}`);
       let left = calcLeft(p, calcWidth);
       let positions = findPositions(prePoints, p, height, left, dpi);
-      div.style = `position: absolute; width: ${calcWidth}px; height: 100%; left: ${left}px; border: 1px solid black;`;
+      div.style = `position: absolute; width: ${calcWidth}px; height: 100%; left: ${left}px;`;
 
       // Calculates the number of pixels we need to move the infoDiv back for it to be centered above the vertical dashed line.
       let calcDivided = graphicalEffects.infoDivWidth / 2;
