@@ -360,7 +360,7 @@ function renderVerticalValues(
     info.innerHTML = `${floorScaled}`;
     info.style = `position: absolute; padding-right: 2px; bottom: ${
       vis - 10
-    }px; z-index: 9; height: 20px; background-color: white; font-size: ${
+    }px; z-index: 9; height: 20px; background-color: transparent; font-size: ${
       graphicalEffects.graphFontSize
     }px;`;
     infoTag.style = `bottom: ${vis}px; width: ${
