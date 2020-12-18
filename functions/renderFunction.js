@@ -25,7 +25,7 @@ export function renderCanvas(
 
   // Create the master div for positioning.
   let masterDiv = document.createElement("div");
-  masterDiv.setAttribute("class", "masterDiv");
+  masterDiv.setAttribute("class", `masterDiv${graphicalEffects.x_hash}`);
   masterDiv.style = `width: ${width + 100}px; position: absolute; left: ${
     graphicalEffects.graphLeft
   }px; right: ${graphicalEffects.graphRight}; margin-left: ${
@@ -37,7 +37,7 @@ export function renderCanvas(
 
   // Create a container div to hold all the smaller divs and sit over the graph.
   let container = document.createElement("div");
-  container.setAttribute("class", "container");
+  container.setAttribute("class", `container${graphicalEffects.x_hash}`);
   container.style = `width: ${scaledWidth}; height: ${height}px; margin-top: 50px; margin-bottom: 50px; position: relative;  margin-left: auto; margin-right: auto; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none;-moz-user-select: none; -ms-user-select: none; user-select: none; outline: none;`;
 
   // Appends the container div into the main document.
@@ -46,7 +46,10 @@ export function renderCanvas(
   // Create a container to hold all the vertical values
   let scaleContainer = document.createElement("div");
   scaleContainer.style = `position: absolute; height: ${height}px; width: ${width}px; left: -40px;`;
-  scaleContainer.setAttribute("class", "scalingContainer");
+  scaleContainer.setAttribute(
+    "class",
+    `scalingContainer${graphicalEffects.x_hash}`
+  );
   container.appendChild(scaleContainer);
 
   // Handle resizing so that the canvas will not be blury and will be
@@ -56,14 +59,16 @@ export function renderCanvas(
 
   // Define the canvas.
   let canv = document.createElement("canvas");
-  canv.setAttribute("class", "canvasID");
+  canv.setAttribute("class", `canvasID${graphicalEffects.x_hash}`);
   canv.style = `border: 1px solid black; width: 100%; height: 100%; box-sizing: border-box;
     position: absolute; padding-bottom: 40px;`;
 
   // Attach the canvas to the body.
   container.appendChild(canv);
 
-  let canvas = contents.getElementsByClassName("canvasID");
+  let canvas = contents.getElementsByClassName(
+    `canvasID${graphicalEffects.x_hash}`
+  );
   let ctx = canvas[0].getContext("2d");
   canvas[0].setAttribute("height", height * dpi);
   canvas[0].setAttribute("width", width * dpi);
@@ -71,10 +76,10 @@ export function renderCanvas(
   ctx.fillRect(0, 0, width * dpi, height * dpi);
   // Calculate the width so that we can define the div widths.
   let scaled = width * 0.85;
-  let calcWidth = calculateWidth(points.length);
+  let calcWidth = calculateWidth(points.length, graphicalEffects);
 
   let textBar = document.createElement("div");
-  textBar.setAttribute("class", "canvasTextBar");
+  textBar.setAttribute("class", `canvasTextBar${graphicalEffects.x_hash}`);
   textBar.style = `width: 200px; position: absolute; top: -50px; margin-left: auto; margin-right: auto; left: 0; right: 0; height: 50px;`;
   container.appendChild(textBar);
 
@@ -90,13 +95,16 @@ export function renderCanvas(
   }
 
   let title = document.createElement("div");
-  title.setAttribute("class", "canvasTitle");
+  title.setAttribute("class", `canvasTitle${graphicalEffects.x_hash}`);
   title.style = `font-size: ${graphicalEffects.fontSize}px; box-sizing: border-box; padding: 10px; display: ${displayMode}; width: 100%; text-align: center;`;
   title.innerHTML = `${text}`;
   textBar.appendChild(title);
 
   let periodMarker = document.createElement("div");
-  periodMarker.setAttribute("class", "canvasPeriodMarker");
+  periodMarker.setAttribute(
+    "class",
+    `canvasPeriodMarker${graphicalEffects.x_hash}`
+  );
 
   let opac;
   if (graphicalEffects.dateRangeActive === true) {
@@ -128,7 +136,7 @@ export function renderCanvas(
 
   // Creates a button that we can click to zoom in on the graph.
   let zoomButton = document.createElement("button");
-  zoomButton.setAttribute("class", "zoom_button");
+  zoomButton.setAttribute("class", `zoom_button${graphicalEffects.x_hash}`);
   zoomButton.style = `width: ${graphicalEffects.buttonSize.width}px; color: ${graphicalEffects.buttonFontColor}; background-color: ${graphicalEffects.buttonColor}; border: ${graphicalEffects.buttonBorder}; font-size: ${graphicalEffects.buttonFontSize}px; height: ${graphicalEffects.buttonSize.height}px; position: absolute; top: -${graphicalEffects.buttonSize.height}px; left: 0; z-index: 9; opacity: 0; transition: 0.3s;`;
   zoomButton.innerHTML = "zoom";
   zoomButton.addEventListener("click", function () {
@@ -138,7 +146,10 @@ export function renderCanvas(
 
   // Creates a buttom that we can click to zoom back out to where we were before.
   let zoomOutButton = document.createElement("button");
-  zoomOutButton.setAttribute("class", "zoom_out_button");
+  zoomOutButton.setAttribute(
+    "class",
+    `zoom_out_button${graphicalEffects.x_hash}`
+  );
   zoomOutButton.style = `width: ${graphicalEffects.buttonSize.width}px; color: ${graphicalEffects.buttonFontColor}; background-color: ${graphicalEffects.buttonColor}; border: ${graphicalEffects.buttonBorder}; font-size: ${graphicalEffects.buttonFontSize}px; height: ${graphicalEffects.buttonSize.height}px; position: absolute; top: -${graphicalEffects.buttonSize.height}px; left: 50px; z-index: 9; opacity: 0; transition: 0.3s;`;
   zoomOutButton.innerHTML = "zoom out";
   zoomOutButton.addEventListener("click", function () {
@@ -162,21 +173,21 @@ export function renderCanvas(
 
   // Creates the information div that tells us what the value of the graph is.
   let infoDiv = document.createElement("div");
-  infoDiv.setAttribute("class", "infoDiv");
+  infoDiv.setAttribute("class", `infoDiv${graphicalEffects.x_hash}`);
   infoDiv.style = `position: absolute; width: ${graphicalEffects.infoDivWidth}px; top: 30px; background-color: lightgrey; opacity: 0; font-size: ${graphicalEffects.graphFontSize}px; text-align: center; padding: 5px; box-sizing: border-box; z-index: 9`;
   container.appendChild(infoDiv);
 
   // Creates a vertical value line to sit on the graph and show you where you're highlighting.
   let infoDivLine = document.createElement("div");
-  infoDivLine.setAttribute("class", "infoDivLine");
+  infoDivLine.setAttribute("class", `infoDivLine${graphicalEffects.x_hash}`);
   infoDivLine.style = `position: absolute; height: 100%; width: 1px; border-right: 1px dashed orange;`;
   container.appendChild(infoDivLine);
 
   // Creates the two boundary divs that appear when you drag the mouse.
   let boundaryDiv1 = document.createElement("div");
   let boundaryDiv2 = document.createElement("div");
-  boundaryDiv1.setAttribute("class", "boundaryDiv1");
-  boundaryDiv2.setAttribute("class", "boundaryDiv2");
+  boundaryDiv1.setAttribute("class", `boundaryDiv1${graphicalEffects.x_hash}`);
+  boundaryDiv2.setAttribute("class", `boundaryDiv2${graphicalEffects.x_hash}`);
   boundaryDiv1.style = `position: absolute; height: ${height}px; width: ${graphicalEffects.boundaryWidth}px; backgroundColor: ${graphicalEffects.gainColor}; display: none;`;
   boundaryDiv2.style = `position: absolute; height: ${height}px; width: ${graphicalEffects.boundaryWidth}px; backgroundColor: ${graphicalEffects.gainColor}; display: none;`;
 
@@ -188,9 +199,11 @@ export function renderCanvas(
   renderHorizontalValues(calcWidth, prePoints, graphicalEffects);
 
   function renderDivs(width, points, prePoints, height, dpi, graphicalEffects) {
-    let container = contents.getElementsByClassName("container");
+    let container = contents.getElementsByClassName(
+      `container${graphicalEffects.x_hash}`
+    );
     let scaled = width * 0.85;
-    let calcWidth = calculateWidth(points.length);
+    let calcWidth = calculateWidth(points.length, graphicalEffects);
     for (let p = 0; p < points.length; p++) {
       // Calculate height of the maximum point on each div. This is because the
       // canvas measures from top to bottom, meaning out graph needs to be flipped.
@@ -205,9 +218,16 @@ export function renderCanvas(
       // Create divs that we can mouse-over to see information.
       let div = document.createElement("div");
       // Calculate distance to move each div to the right so that they don't. overlap
-      div.setAttribute("class", `divEl${p}`);
+      div.setAttribute("class", `divEl${p}${graphicalEffects.x_hash}`);
       let left = calcLeft(p, calcWidth);
-      let positions = findPositions(prePoints, p, height, left, dpi);
+      let positions = findPositions(
+        prePoints,
+        p,
+        height,
+        left,
+        dpi,
+        graphicalEffects
+      );
       div.style = `position: absolute; width: ${calcWidth}px; height: 100%; left: ${left}px;`;
 
       // Calculates the number of pixels we need to move the infoDiv back for it to be centered above the vertical dashed line.
@@ -224,7 +244,8 @@ export function renderCanvas(
           dpi,
           calcDivided,
           calcWidth,
-          graphicalEffects.contentsDiv
+          graphicalEffects.contentsDiv,
+          graphicalEffects
         );
       });
       // Function for when we move out of a div, which removes the circle.
@@ -238,7 +259,8 @@ export function renderCanvas(
           dpi,
           calcDivided,
           calcWidth,
-          graphicalEffects.contentsDiv
+          graphicalEffects.contentsDiv,
+          graphicalEffects
         );
       });
 
@@ -268,7 +290,8 @@ export function renderCanvas(
         positions.positioningy2,
         calculatedLineColor,
         graphicalEffects.lineWidth,
-        graphicalEffects.contentsDiv
+        graphicalEffects.contentsDiv,
+        graphicalEffects
       );
     }
   }
@@ -343,14 +366,21 @@ function renderVerticalValues(
 
   let contents = document.getElementById(graphicalEffects.contentsDiv);
 
-  let container = contents.getElementsByClassName("container");
-  let scalingContainer = contents.getElementsByClassName("scalingContainer");
+  let container = contents.getElementsByClassName(
+    `container${graphicalEffects.x_hash}`
+  );
+  let scalingContainer = contents.getElementsByClassName(
+    `scalingContainer${graphicalEffects.x_hash}`
+  );
 
   for (let i = 0; i < vertValNum; i++) {
     let info = document.createElement("div");
     let infoTag = document.createElement("div");
-    info.setAttribute("class", `verticalScale${i}`);
-    infoTag.setAttribute("class", `verticalScaleDiv${i}`);
+    info.setAttribute("class", `verticalScale${i}${graphicalEffects.x_hash}`);
+    infoTag.setAttribute(
+      "class",
+      `verticalScaleDiv${i}${graphicalEffects.x_hash}`
+    );
 
     let scaled = i * avgBreak + min;
     let floorScaled = Math.floor(scaled * 100) / 100;
@@ -376,7 +406,9 @@ function renderVerticalValues(
 function renderHorizontalValues(calcWidth, points, graphicalEffects) {
   let contents = document.getElementById(graphicalEffects.contentsDiv);
   let max = points.length - 1;
-  let container = contents.getElementsByClassName("container");
+  let container = contents.getElementsByClassName(
+    `container${graphicalEffects.x_hash}`
+  );
   for (let v = 0; v < max; v += graphicalEffects.decluttering) {
     let width = v * calcWidth + calcWidth / 2;
     let info = document.createElement("p");
@@ -392,22 +424,34 @@ function calcLeft(p, calcWidth) {
   return calcLeft;
 }
 
-function findPositions(points, p, height, left, dpi) {
+function findPositions(points, p, height, left, dpi, graphicalEffects) {
   // vertically to actually appear correct.
   let modifiedHeight = height * dpi;
   let posY = modifiedHeight - points[p].y * dpi;
   // Calculates the center of the div.
   // positioningx1 finds the x-pos for the current div.
   // positioningx2 finds the x-pos for the next div.
-  let calcWidth = calculateWidth(points.length);
-  let positioningx1 = calculateCenterAlign(points.length, left, 5, dpi);
+  let calcWidth = calculateWidth(points.length, graphicalEffects);
+  let positioningx1 = calculateCenterAlign(
+    points.length,
+    left,
+    5,
+    dpi,
+    graphicalEffects
+  );
   let positioningy1 = posY;
   let leftPosX2 = left + calcWidth;
   let positioningx2;
   let positioningy2;
   if (points[p + 1]) {
     positioningy2 = modifiedHeight - points[p + 1].y * dpi;
-    positioningx2 = calculateCenterAlign(points.length, leftPosX2, 5, dpi);
+    positioningx2 = calculateCenterAlign(
+      points.length,
+      leftPosX2,
+      5,
+      dpi,
+      graphicalEffects
+    );
   } else {
     positioningy2 = posY;
     positioningx2 = positioningx1 + calcWidth;
@@ -429,11 +473,14 @@ function renderLine(
   endY,
   lineColor,
   lineWidth,
-  contentsDiv
+  contentsDiv,
+  graphicalEffects
 ) {
   let contents = document.getElementById(contentsDiv);
   // Renders from to - equivalent to css styling top: endY.
-  let canvas = contents.getElementsByClassName("canvasID");
+  let canvas = contents.getElementsByClassName(
+    `canvasID${graphicalEffects.x_hash}`
+  );
   let ctx = canvas[0].getContext("2d");
   ctx.strokeStyle = lineColor;
   ctx.lineWidth = lineWidth;
@@ -454,11 +501,16 @@ function renderInfoDiv(
   dpi,
   calcDivided,
   calcWidth,
-  contentsDiv
+  contentsDiv,
+  graphicalEffects
 ) {
   let contents = document.getElementById(contentsDiv);
-  let info = contents.getElementsByClassName("infoDiv");
-  let infoLine = contents.getElementsByClassName("infoDivLine");
+  let info = contents.getElementsByClassName(
+    `infoDiv${graphicalEffects.x_hash}`
+  );
+  let infoLine = contents.getElementsByClassName(
+    `infoDivLine${graphicalEffects.x_hash}`
+  );
   let medCalcWidth = calcWidth / 2;
   let avgVal;
   if (p[currentVal - 1]) {
@@ -488,8 +540,10 @@ function renderInfoDiv(
 }
 
 // Calculates the center of the div.
-export function calculateCenterAlign(len, left, radius, dpi) {
-  let containerWidth = document.getElementsByClassName("container");
+export function calculateCenterAlign(len, left, radius, dpi, graphicalEffects) {
+  let containerWidth = document.getElementsByClassName(
+    `container${graphicalEffects.x_hash}`
+  );
   let w = containerWidth[0].getBoundingClientRect();
   console.log("width of container: " + w.width);
   let width = w.width / len;
@@ -498,8 +552,10 @@ export function calculateCenterAlign(len, left, radius, dpi) {
 }
 
 // Calculates the width of each component div.
-function calculateWidth(xPoints) {
-  let containerWidth = document.getElementsByClassName("container");
+function calculateWidth(xPoints, graphicalEffects) {
+  let containerWidth = document.getElementsByClassName(
+    `container${graphicalEffects.x_hash}`
+  );
   let w = containerWidth[0].getBoundingClientRect();
   console.log("width of container: " + w.width);
   let graphWidth = w.width / xPoints;

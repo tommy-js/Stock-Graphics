@@ -21,8 +21,12 @@ export function storeArray(initialArray, modifiedArray) {
 export function zoom(height, width, points, prePoints, graphicalEffects) {
   let contents = document.getElementById(graphicalEffects.contentsDiv);
 
-  let container = contents.getElementsByClassName("container");
-  let scalingContainer = contents.getElementsByClassName("scalingContainer");
+  let container = contents.getElementsByClassName(
+    `container${graphicalEffects.x_hash}`
+  );
+  let scalingContainer = contents.getElementsByClassName(
+    `scalingContainer${graphicalEffects.x_hash}`
+  );
 
   let pointCopy = [...prevArray];
 
@@ -92,8 +96,12 @@ export function zoomDown(
 ) {
   let contents = document.getElementById(graphicalEffects.contentsDiv);
   // Deletes any boundaries present when the mouse is clicked on the graph, thus reducing annoyance for the user.
-  let boundaryDiv1 = contents.getElementsByClassName("boundaryDiv1");
-  let boundaryDiv2 = contents.getElementsByClassName("boundaryDiv2");
+  let boundaryDiv1 = contents.getElementsByClassName(
+    `boundaryDiv1${graphicalEffects.x_hash}`
+  );
+  let boundaryDiv2 = contents.getElementsByClassName(
+    `boundaryDiv2${graphicalEffects.x_hash}`
+  );
   boundaryDiv1[0].style.display = "none";
   boundaryDiv2[0].style.display = "none";
 
@@ -106,7 +114,9 @@ function renderZoomDown(index, calcWidth, points, left, dpi, graphicalEffects) {
   // Renders out the boundary div when the mouse is first clicked.
   let contents = document.getElementById(graphicalEffects.contentsDiv);
 
-  let boundaryDiv1 = contents.getElementsByClassName("boundaryDiv1");
+  let boundaryDiv1 = contents.getElementsByClassName(
+    `boundaryDiv1${graphicalEffects.x_hash}`
+  );
   let width = calcWidth * index;
 
   // Calculates the center value of the container div so that the boundary will appear at the highest value.
@@ -114,7 +124,8 @@ function renderZoomDown(index, calcWidth, points, left, dpi, graphicalEffects) {
     calcWidth,
     width,
     graphicalEffects.boundaryWidth,
-    1
+    1,
+    graphicalEffects
   );
   boundaryDiv1[0].style.left = `${centered}px`;
   boundaryDiv1[0].style.display = "block";
@@ -131,7 +142,9 @@ function renderZoomUp(index, calcWidth, points, left, dpi, graphicalEffects) {
   let contents = document.getElementById(graphicalEffects.contentsDiv);
 
   if (indexed[0] != indexed[1]) {
-    let boundaryDiv2 = contents.getElementsByClassName("boundaryDiv2");
+    let boundaryDiv2 = contents.getElementsByClassName(
+      `boundaryDiv2${graphicalEffects.x_hash}`
+    );
     let width = calcWidth * index;
 
     // Calculates the center value of the container div so that the boundary will appear at the highest value.
@@ -139,7 +152,8 @@ function renderZoomUp(index, calcWidth, points, left, dpi, graphicalEffects) {
       calcWidth,
       width,
       graphicalEffects.boundaryWidth,
-      1
+      1,
+      graphicalEffects
     );
 
     boundaryDiv2[0].style.left = `${centered}px`;
@@ -155,7 +169,9 @@ function renderZoomUp(index, calcWidth, points, left, dpi, graphicalEffects) {
       sub = points[ind2].y - points[ind1].y;
     }
 
-    let boundaryDiv1 = contents.getElementsByClassName("boundaryDiv1");
+    let boundaryDiv1 = contents.getElementsByClassName(
+      `boundaryDiv1${graphicalEffects.x_hash}`
+    );
     if (sub < 0) {
       boundaryDiv1[0].style.backgroundColor = `${graphicalEffects.lossColor}`;
       boundaryDiv2[0].style.backgroundColor = `${graphicalEffects.lossColor}`;
@@ -165,7 +181,9 @@ function renderZoomUp(index, calcWidth, points, left, dpi, graphicalEffects) {
     }
   } else {
     // Handles the situation when the user clicks on the same div twice.
-    let boundaryDiv1 = contents.getElementsByClassName("boundaryDiv1");
+    let boundaryDiv1 = contents.getElementsByClassName(
+      `boundaryDiv1${graphicalEffects.x_hash}`
+    );
     boundaryDiv1[0].style.display = "none";
   }
 }
@@ -194,8 +212,12 @@ export function zoomOut(height, width, graphicalEffects) {
 
     let contents = document.getElementById(graphicalEffects.contentsDiv);
 
-    let container = contents.getElementsByClassName("container");
-    let scalingContainer = contents.getElementsByClassName("scalingContainer");
+    let container = contents.getElementsByClassName(
+      `container${graphicalEffects.x_hash}`
+    );
+    let scalingContainer = contents.getElementsByClassName(
+      `scalingContainer${graphicalEffects.x_hash}`
+    );
 
     renderCanvas(height, width, modArr, prevArr, graphicalEffects);
   }
