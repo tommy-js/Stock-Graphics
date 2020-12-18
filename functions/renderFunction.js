@@ -545,7 +545,6 @@ export function calculateCenterAlign(len, left, radius, dpi, graphicalEffects) {
     `container${graphicalEffects.x_hash}`
   );
   let w = containerWidth[0].getBoundingClientRect();
-  console.log("width of container: " + w.width);
   let width = w.width / len;
   let calculatedPos = (left + width / 2 + radius * 2) * dpi;
   return calculatedPos;
@@ -557,7 +556,6 @@ function calculateWidth(xPoints, graphicalEffects) {
     `container${graphicalEffects.x_hash}`
   );
   let w = containerWidth[0].getBoundingClientRect();
-  console.log("width of container: " + w.width);
   let graphWidth = w.width / xPoints;
   return graphWidth;
 }

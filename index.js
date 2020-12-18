@@ -59,13 +59,11 @@ export function renderFull(points, graphicalEffects) {
 
   function reformatPoints(points, canvHeight, canvBase) {
     let range = canvHeight - canvBase;
-    console.log("range: " + range);
     let height = graphicalEffects.graphHeight;
     let scaledHeight = height * 0.75;
     let scale = scaledHeight / range;
 
     let distance = canvBase * scale;
-    console.log("distance: " + distance);
 
     let pointsCopy = [];
     for (let t = 0; t < points.length; t++) {
@@ -73,8 +71,6 @@ export function renderFull(points, graphicalEffects) {
       let newObj = { x: points[t].x, y: mult };
       pointsCopy.push(newObj);
     }
-    console.log("scaled array: ");
-    console.log(pointsCopy);
     return pointsCopy;
   }
 
@@ -115,12 +111,10 @@ export function calculateCanvasBase(points) {
 
 export function reformatPoints(points, canvHeight, canvBase, height) {
   let range = canvHeight - canvBase;
-  console.log("range: " + range);
   let scaledHeight = height * 0.75;
   let scale = scaledHeight / range;
 
   let distance = canvBase * scale;
-  console.log("distance: " + distance);
 
   let pointsCopy = [];
   for (let t = 0; t < points.length; t++) {
@@ -128,7 +122,5 @@ export function reformatPoints(points, canvHeight, canvBase, height) {
     let newObj = { x: points[t].x, y: mult };
     pointsCopy.push(newObj);
   }
-  console.log("scaled array: ");
-  console.log(pointsCopy);
   return pointsCopy;
 }

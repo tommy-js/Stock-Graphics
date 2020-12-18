@@ -12,7 +12,6 @@ let modifiedPrevArray;
 
 export function storeArray(initialArray, modifiedArray) {
   indexedArray[0].b = initialArray.length;
-  console.log(indexedArray);
 
   prevArray = [...initialArray];
   modifiedPrevArray = [...modifiedArray];
@@ -52,8 +51,6 @@ export function zoom(height, width, points, prePoints, graphicalEffects) {
       let y = indexed[1];
       let obj = { a: y, b: x };
       indexedArray.push(obj);
-      console.log("array from zoom: ");
-      console.log(indexedArray);
     } else if (indexed[1] > indexed[0]) {
       prePointCopy.splice(indexed[1]);
       prePointCopy.splice(0, indexed[0]);
@@ -64,8 +61,6 @@ export function zoom(height, width, points, prePoints, graphicalEffects) {
       let y = indexed[0];
       let obj = { a: y, b: x };
       indexedArray.push(obj);
-      console.log("array from zoom: ");
-      console.log(indexedArray);
     } else {
       console.log("err");
     }
@@ -117,7 +112,7 @@ function renderZoomDown(index, calcWidth, points, left, dpi, graphicalEffects) {
   let boundaryDiv1 = contents.getElementsByClassName(
     `boundaryDiv1${graphicalEffects.x_hash}`
   );
-  let width = calcWidth * index;
+  let width = calcWidth * index + (1 / 2) * calcWidth;
 
   // Calculates the center value of the container div so that the boundary will appear at the highest value.
   let centered = calculateCenterAlign(
@@ -127,7 +122,7 @@ function renderZoomDown(index, calcWidth, points, left, dpi, graphicalEffects) {
     1,
     graphicalEffects
   );
-  boundaryDiv1[0].style.left = `${centered}px`;
+  boundaryDiv1[0].style.left = `${width}px`;
   boundaryDiv1[0].style.display = "block";
 }
 
@@ -145,7 +140,7 @@ function renderZoomUp(index, calcWidth, points, left, dpi, graphicalEffects) {
     let boundaryDiv2 = contents.getElementsByClassName(
       `boundaryDiv2${graphicalEffects.x_hash}`
     );
-    let width = calcWidth * index;
+    let width = calcWidth * index + (1 / 2) * calcWidth;
 
     // Calculates the center value of the container div so that the boundary will appear at the highest value.
     let centered = calculateCenterAlign(
@@ -156,7 +151,7 @@ function renderZoomUp(index, calcWidth, points, left, dpi, graphicalEffects) {
       graphicalEffects
     );
 
-    boundaryDiv2[0].style.left = `${centered}px`;
+    boundaryDiv2[0].style.left = `${width}px`;
     boundaryDiv2[0].style.display = "block";
 
     // Everything below handles the positive/negative result when you drag the boundary div.
@@ -199,16 +194,11 @@ export function zoomOut(height, width, graphicalEffects) {
     } else if (indexedLength === 1) {
       prevObj = indexedArray[0];
     }
-    console.log("prev obj: ");
-    console.log(prevObj);
     modArr.splice(0, prevObj.a);
     modArr.splice(prevObj.b);
     prevArr.splice(0, prevObj.a);
     prevArr.splice(prevObj.b);
     indexedArray.splice(indexedLength - 1);
-    console.log(indexedArray);
-    console.log(prevArray);
-    console.log(modifiedPrevArray);
 
     let contents = document.getElementById(graphicalEffects.contentsDiv);
 
