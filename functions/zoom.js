@@ -1,4 +1,4 @@
-import { renderCanvas, calculateCenterAlign } from "./renderFunction.js";
+import { renderCanvas } from "./renderFunction.js";
 import {
   reformatPoints,
   calculateCanvasHeight,
@@ -114,14 +114,6 @@ function renderZoomDown(index, calcWidth, points, left, dpi, graphicalEffects) {
   );
   let width = calcWidth * index + (1 / 2) * calcWidth;
 
-  // Calculates the center value of the container div so that the boundary will appear at the highest value.
-  let centered = calculateCenterAlign(
-    calcWidth,
-    width,
-    graphicalEffects.boundaryWidth,
-    1,
-    graphicalEffects
-  );
   boundaryDiv1[0].style.left = `${width}px`;
   boundaryDiv1[0].style.display = "block";
 }
@@ -141,15 +133,6 @@ function renderZoomUp(index, calcWidth, points, left, dpi, graphicalEffects) {
       `boundaryDiv2${graphicalEffects.x_hash}`
     );
     let width = calcWidth * index + (1 / 2) * calcWidth;
-
-    // Calculates the center value of the container div so that the boundary will appear at the highest value.
-    let centered = calculateCenterAlign(
-      calcWidth,
-      width,
-      graphicalEffects.boundaryWidth,
-      1,
-      graphicalEffects
-    );
 
     boundaryDiv2[0].style.left = `${width}px`;
     boundaryDiv2[0].style.display = "block";

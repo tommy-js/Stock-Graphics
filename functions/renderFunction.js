@@ -96,7 +96,7 @@ export function renderCanvas(
 
   let title = document.createElement("div");
   title.setAttribute("class", `canvasTitle${graphicalEffects.x_hash}`);
-  title.style = `font-size: ${graphicalEffects.fontSize}px; box-sizing: border-box; padding: 10px; display: ${displayMode}; width: 100%; text-align: center;`;
+  title.style = `font-size: ${graphicalEffects.fontSize}px;  font-family: ${graphicalEffects.fontFamily};  box-sizing: border-box; padding: 10px; display: ${displayMode}; width: 100%; text-align: center;`;
   title.innerHTML = `${text}`;
   textBar.appendChild(title);
 
@@ -113,7 +113,7 @@ export function renderCanvas(
     opac = 0;
   }
 
-  periodMarker.style = `width: 200px; left: 0; bottom: -50px; height: 50px; position: absolute; transition: 0.3s; z-index: 9`;
+  periodMarker.style = `width: 200px; left: 0; bottom: -50px; height: 50px; position: absolute; font-family: ${graphicalEffects.fontFamily}; transition: 0.3s; z-index: 9`;
   periodMarker.style.opacity = opac;
   let index1 = points[0].x;
   let index2 = points[points.length - 1].x;
@@ -137,8 +137,25 @@ export function renderCanvas(
   // Creates a button that we can click to zoom in on the graph.
   let zoomButton = document.createElement("button");
   zoomButton.setAttribute("class", `zoom_button${graphicalEffects.x_hash}`);
-  zoomButton.style = `width: ${graphicalEffects.buttonSize.width}px; color: ${graphicalEffects.buttonFontColor}; background-color: ${graphicalEffects.buttonColor}; border: ${graphicalEffects.buttonBorder}; font-size: ${graphicalEffects.buttonFontSize}px; height: ${graphicalEffects.buttonSize.height}px; position: absolute; top: -${graphicalEffects.buttonSize.height}px; left: 0; z-index: 9; opacity: 0; transition: 0.3s;`;
+  zoomButton.style = `width: ${graphicalEffects.buttonSize.width}px; margin-right: 5px; border-radius: 5px; color: ${graphicalEffects.buttonFontColor}; background-color: ${graphicalEffects.buttonColor};  border: 1px solid ${graphicalEffects.buttonFontColor};; font-size: ${graphicalEffects.buttonFontSize}px; font-family: ${graphicalEffects.fontFamily};  height: ${graphicalEffects.buttonSize.height}px; position: absolute; top: -${graphicalEffects.buttonSize.height}px; left: 0; z-index: 9; cursor: pointer; opacity: 0; transition: 0.3s;`;
   zoomButton.innerHTML = "zoom";
+  zoomButton.onmouseover = function () {
+    mouseOver();
+  };
+  zoomButton.onmouseout = function () {
+    mouseOut();
+  };
+
+  function mouseOver() {
+    zoomButton.style.color = "#990011ff";
+    zoomButton.style.border = "1px solid #990011ff";
+  }
+
+  function mouseOut() {
+    zoomButton.style.color = `${graphicalEffects.buttonFontColor}`;
+    zoomButton.style.border = `1px solid ${graphicalEffects.buttonFontColor}`;
+  }
+
   zoomButton.addEventListener("click", function () {
     zoom(height, width, points, prePoints, graphicalEffects);
   });
@@ -150,8 +167,26 @@ export function renderCanvas(
     "class",
     `zoom_out_button${graphicalEffects.x_hash}`
   );
-  zoomOutButton.style = `width: ${graphicalEffects.buttonSize.width}px; color: ${graphicalEffects.buttonFontColor}; background-color: ${graphicalEffects.buttonColor}; border: ${graphicalEffects.buttonBorder}; font-size: ${graphicalEffects.buttonFontSize}px; height: ${graphicalEffects.buttonSize.height}px; position: absolute; top: -${graphicalEffects.buttonSize.height}px; left: 50px; z-index: 9; opacity: 0; transition: 0.3s;`;
+  zoomOutButton.style = `width: ${graphicalEffects.buttonSize.width}px; color: ${graphicalEffects.buttonFontColor}; background-color: ${graphicalEffects.buttonColor}; border: 1px solid ${graphicalEffects.buttonFontColor}; font-size: ${graphicalEffects.buttonFontSize}px; font-family: ${graphicalEffects.fontFamily};  height: ${graphicalEffects.buttonSize.height}px; position: absolute; top: -${graphicalEffects.buttonSize.height}px; left: 55px; border-radius: 5px; z-index: 9; cursor: pointer; opacity: 0; transition: 0.3s;`;
   zoomOutButton.innerHTML = "zoom out";
+
+  zoomOutButton.onmouseover = function () {
+    mouseOver2();
+  };
+  zoomOutButton.onmouseout = function () {
+    mouseOut2();
+  };
+
+  function mouseOver2() {
+    zoomOutButton.style.color = "#990011ff";
+    zoomOutButton.style.border = "1px solid #990011ff";
+  }
+
+  function mouseOut2() {
+    zoomOutButton.style.color = `${graphicalEffects.buttonFontColor}`;
+    zoomOutButton.style.border = `1px solid ${graphicalEffects.buttonFontColor}`;
+  }
+
   zoomOutButton.addEventListener("click", function () {
     zoomOut(height, width, graphicalEffects);
   });
@@ -174,7 +209,7 @@ export function renderCanvas(
   // Creates the information div that tells us what the value of the graph is.
   let infoDiv = document.createElement("div");
   infoDiv.setAttribute("class", `infoDiv${graphicalEffects.x_hash}`);
-  infoDiv.style = `position: absolute; width: ${graphicalEffects.infoDivWidth}px; top: 30px; background-color: lightgrey; opacity: 0; font-size: ${graphicalEffects.graphFontSize}px; text-align: center; padding: 5px; box-sizing: border-box; z-index: 9`;
+  infoDiv.style = `position: absolute; width: ${graphicalEffects.infoDivWidth}px; top: 30px; background-color: #57a773; opacity: 0; font-size: ${graphicalEffects.graphFontSize}px; color: #fcf6f5ff; font-family: ${graphicalEffects.fontFamily}; text-align: center; padding: 5px; box-sizing: border-box; z-index: 9`;
   container.appendChild(infoDiv);
 
   // Creates a vertical value line to sit on the graph and show you where you're highlighting.
@@ -391,9 +426,9 @@ function renderVerticalValues(
     // Gets width of the info container.
     info.style = `position: absolute; bottom: ${
       vis - 10
-    }px; z-index: 9; height: 20px; left: -15px; background-color: transparent; font-size: ${
-      graphicalEffects.graphFontSize
-    }px; box-sizing: border-box;`;
+    }px; z-index: 9; height: 20px; left: -15px; background-color: transparent; font-family: ${
+      graphicalEffects.fontFamily
+    }; font-size: ${graphicalEffects.graphFontSize}px; box-sizing: border-box;`;
     infoTag.style = `bottom: ${vis}px; width: ${
       0.925 * (graphicalEffects.graphWidth + 100)
     }px; position: absolute; height: 25px; margin: 0; border-bottom: 1px solid #E8E8E8;`;
@@ -414,7 +449,7 @@ function renderHorizontalValues(calcWidth, points, graphicalEffects) {
     let info = document.createElement("p");
     info.innerHTML = `${points[v].x}`;
     container[0].appendChild(info);
-    info.style = `bottom: 0; left: ${width}px; position: absolute;  font-size: ${graphicalEffects.graphFontSize}px;`;
+    info.style = `bottom: 0; left: ${width}px; position: absolute; font-family: ${graphicalEffects.fontFamily}; font-size: ${graphicalEffects.graphFontSize}px;`;
   }
 }
 
@@ -521,7 +556,7 @@ function renderInfoDiv(
   let roundedAvgVal = Math.round(avgVal * 100) / 100;
   if (mouseIn === true) {
     // Displays the height of the hovered element.
-    info[0].innerHTML = `${p[currentVal].x}: ${roundedAvgVal}`;
+    info[0].innerHTML = `${p[currentVal].x}: $${roundedAvgVal}`;
     // Styles the component so that it sits just left of the highest point.
     info[0].style.left = `${x - calcDivided + medCalcWidth}px`;
 
