@@ -168,13 +168,13 @@ function renderZoomUp(index, calcWidth, points, left, dpi, graphicalEffects) {
 
 export function zoomOut(height, width, graphicalEffects) {
   let indexedLength = indexedArray.length;
-  if (indexedLength > 0) {
+  if (indexedLength > 1) {
     let modArr = [...modifiedPrevArray];
     let prevArr = [...prevArray];
     let prevObj;
-    if (indexedLength > 1) {
+    if (indexedLength > 2) {
       prevObj = indexedArray[indexedLength - 2];
-    } else if (indexedLength === 1) {
+    } else if (indexedLength === 2) {
       prevObj = indexedArray[0];
     }
     modArr.splice(0, prevObj.a);
