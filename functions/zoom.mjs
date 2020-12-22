@@ -1,9 +1,9 @@
-import { renderCanvas } from "./renderFunction.js";
+import { renderCanvas } from "./renderFunction.mjs";
 import {
   reformatPoints,
   calculateCanvasHeight,
   calculateCanvasBase,
-} from "../index.js";
+} from "../index.mjs";
 
 let indexed = [0, 0];
 let indexedArray = [{ a: 0, b: 0 }];

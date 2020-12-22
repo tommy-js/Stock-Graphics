@@ -1,4 +1,4 @@
-import { zoomDown, zoomUp, zoom, zoomOut } from "./zoom.js";
+import { zoomDown, zoomUp, zoom, zoomOut } from "./zoom.mjs";
 // The render function renders the initial graph, starting with either one month
 // of data or the maximum data there is available, whichever is smaller.
 

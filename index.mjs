@@ -2,8 +2,8 @@
 // This project will be a small graphics library, designed for the express purpose of
 // rendering stock charts and allowing for user input and interaction.
 
-import { renderCanvas } from "./functions/renderFunction.js";
-import { storeArray } from "./functions/zoom.js";
+import { renderCanvas } from "./functions/renderFunction.mjs";
+import { storeArray } from "./functions/zoom.mjs";
 
 export function renderFull(points, graphicalEffects) {
   let typeOfHeight = typeof graphicalEffects.graphHeight;
