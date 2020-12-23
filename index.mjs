@@ -3,11 +3,12 @@
 // rendering stock charts and allowing for user input and interaction.
 
 import { renderCanvas } from "./functions/renderFunction.mjs";
-import { storeArray } from "./functions/zoom.mjs";
 
-export function renderFull(points, graphicalEffects) {
+export function renderFull(graphicalEffects) {
   let typeOfHeight = typeof graphicalEffects.graphHeight;
   let typeOfWidth = typeof graphicalEffects.graphWidth;
+
+  graphicalEffects.indexedArray[0].b = graphicalEffects.initialValues.length;
 
   let contents = document.getElementById(graphicalEffects.contentsDiv);
   let positionContents = contents.getBoundingClientRect();
@@ -30,59 +31,23 @@ export function renderFull(points, graphicalEffects) {
     }
   }
 
-  function calculateCanvasHeight(points) {
-    // Calculates the maximum y-variable of the canvas.
-    let calculatedMaxHeight = Math.max.apply(
-      Math,
-      points.map(function (o) {
-        return o.y;
-      })
-    );
-    return calculatedMaxHeight;
-  }
+  let canvHeight = calculateCanvasHeight(graphicalEffects.modifiedPoints);
+  let canvBase = calculateCanvasBase(graphicalEffects.modifiedPoints);
 
-  function calculateCanvasBase(points) {
-    // Calculates the lowest point of the y-variable on the canvas.
-    let calculatedMinHeight = Math.min.apply(
-      Math,
-      points.map(function (o) {
-        return o.y;
-      })
-    );
-    return calculatedMinHeight;
-  }
+  let modifiedPoints = reformatPoints(
+    graphicalEffects.modifiedPoints,
+    canvHeight,
+    canvBase,
+    graphicalEffects.graphHeight
+  );
 
-  let canvHeight = calculateCanvasHeight(points);
-  let canvBase = calculateCanvasBase(points);
-
-  // Formats the points we have so that they actually fill the graph screen.
-
-  function reformatPoints(points, canvHeight, canvBase) {
-    let range = canvHeight - canvBase;
-    let height = graphicalEffects.graphHeight;
-    let scaledHeight = height * 0.75;
-    let scale = scaledHeight / range;
-
-    let distance = canvBase * scale;
-
-    let pointsCopy = [];
-    for (let t = 0; t < points.length; t++) {
-      let mult = points[t].y * scale - distance;
-      let newObj = { x: points[t].x, y: mult };
-      pointsCopy.push(newObj);
-    }
-    return pointsCopy;
-  }
-
-  let modifiedPoints = reformatPoints(points, canvHeight, canvBase);
-
-  storeArray(points, modifiedPoints);
+  graphicalEffects.modifiedPoints = modifiedPoints;
 
   renderCanvas(
     graphicalEffects.graphHeight,
     graphicalEffects.graphWidth,
-    modifiedPoints,
-    points,
+    graphicalEffects.modifiedPoints,
+    graphicalEffects.initialValues,
     graphicalEffects
   );
 }
